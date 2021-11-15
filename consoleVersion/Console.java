@@ -32,7 +32,11 @@ public class Console {
 
         public static void kids(){
 
-            int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
+            String playerOne, playerTwo;
+
+            Scanner input = new Scanner(System.in);
+
+            int  numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
             char[] solution;
 
             boolean[] hints = {false, false, false, false};
@@ -40,36 +44,45 @@ public class Console {
             char[] guess = {'_', '_', '_', '_'};
             int count=0;
 
-            while (gamesPlayed <= numGames) {               //RESOLVE ISSUE
+            System.out.println("Please enter your name Player One: ");
+            playerOne = input.nextLine();
 
-                solution = createCode();
+            System.out.println("Please enter your name Player Two: ");
+            playerTwo = input.nextLine();
+
+
+            while (numGames != -1) {
+
+                solution = createCode(playerOne);
 
                 System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                while (guessesMade <= numGuesses){
+                while (numGuesses != -1){
 
                     equal = false;
 
                     while(!equal){
 
                         System.out.println("Guess " + (guessesMade+1));
-                        guess = createCode();
+                        guess = createCode(playerTwo);
 
 
                         for(int i = 0; i < guess.length; i++){
-                            if(compareCodeKids(guess, solution))
+                            if(compareCodeKids(guess, solution))        //resolve issue below
                                 hints[i] = true;
                         }
 
                         System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                        for(int i = 0; i < hints.length; i++){
-                            if(hints[i] = true)
+                        for (boolean hint : hints) {
+                            if (hint)
                                 count++;
                         }
 
                         if(count == 4) {
                             equal = true;
+                            numGuesses = -1;
+                            numGames = -1;
                         }
 
                     }
@@ -78,7 +91,8 @@ public class Console {
 
                 gamesPlayed++;
             }
-
+            //if won
+            System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
         }
 
         /*public static void classic(){
@@ -129,38 +143,49 @@ public class Console {
 
         }*/
 
-        public static int Games(){
+        public static int numberValidator(String s){
 
-            int numGames = 0;
-
-            Scanner input = new Scanner(System.in);
-
-            while(numGames < 1 || numGames > 10){
-                System.out.println("How many games would you like to play? (max 10) ");
-                numGames = input.nextInt();
-            }
-            return numGames;
-        }
-
-        public static int Guesses(){
-
-            int numGuesses=0;
+            String numAsString;
+            int num = 0;
+            boolean valid;
+            int i;
 
             Scanner input = new Scanner(System.in);
 
-            while(numGuesses < 1 || numGuesses > 12) {
-                System.out.println("Please enter max number of guesses? (max 12) ");
-                numGuesses = input.nextInt();
+            System.out.println("How many " + s + " would you like to play? (max 10) ");
+            numAsString = input.nextLine();
+
+            valid = false;
+
+            while(!valid){
+
+                for(i = 0; i < numAsString.length(); i++) {
+                    if (!Character.isDigit(numAsString.charAt(i))) {
+                        break;
+                    }
+                }
+                if(i == numAsString.length() && !numAsString.equals("")){
+                    num = Integer.parseInt(numAsString);
+
+                    if(num >= 1 && num <= 10){
+                        valid = true;
+                    }
+                }
+                else
+                    System.out.println("Invalid! How many " + s + " would you like to play? (max 10) ");
+                numAsString = input.nextLine();
             }
-            return numGuesses;
+            return num;
         }
 
-        public static char[] createCode(){
+        public static char[] createCode(String play1){
 
             char colour;
             char[] s = new char[4];
 
             Scanner input = new Scanner(System.in);
+
+            System.out.println("Welcome " + play1);
 
             for(int i = 0; i < 4; i++){
 
@@ -193,6 +218,8 @@ public class Console {
 
     public static boolean compareCodeKids(char[] g, char[] s){
         //sort array and use search to improve efficiency
+
+        //if multiple colours only one true hint (2,3 or 4)
 
         int count=0;
 
