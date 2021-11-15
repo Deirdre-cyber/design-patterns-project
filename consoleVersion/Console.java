@@ -32,6 +32,10 @@ public class Console {
 
         public static void kids(){
 
+            String name;
+
+            Scanner input = new Scanner(System.in);
+
             int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
             char[] solution;
 
@@ -40,13 +44,16 @@ public class Console {
             char[] guess = {'_', '_', '_', '_'};
             int count=0;
 
-            while (gamesPlayed <= numGames) {               //RESOLVE ISSUE
+            System.out.println("Please enter your name: ");
+            name = input.nextLine();
+
+            while (numGames != -1) {
 
                 solution = createCode();
 
                 System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                while (guessesMade <= numGuesses){
+                while (numGuesses != -1){
 
                     equal = false;
 
@@ -57,19 +64,21 @@ public class Console {
 
 
                         for(int i = 0; i < guess.length; i++){
-                            if(compareCodeKids(guess, solution))
+                            if(compareCodeKids(guess, solution))        //resolve issue below
                                 hints[i] = true;
                         }
 
                         System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                        for(int i = 0; i < hints.length; i++){
-                            if(hints[i] = true)
+                        for (boolean hint : hints) {
+                            if (hint)
                                 count++;
                         }
 
                         if(count == 4) {
                             equal = true;
+                            numGuesses = -1;
+                            numGames = -1;
                         }
 
                     }
@@ -78,7 +87,8 @@ public class Console {
 
                 gamesPlayed++;
             }
-
+            //if won
+            System.out.print(name + " played " + gamesPlayed + " games " + " won in " + guessesMade + " guesses, Congratulations!");
         }
 
         /*public static void classic(){
@@ -134,7 +144,7 @@ public class Console {
             int numGames = 0;
 
             Scanner input = new Scanner(System.in);
-
+            //more validation - must be number
             while(numGames < 1 || numGames > 10){
                 System.out.println("How many games would you like to play? (max 10) ");
                 numGames = input.nextInt();
@@ -147,7 +157,7 @@ public class Console {
             int numGuesses=0;
 
             Scanner input = new Scanner(System.in);
-
+            //more validation - must be number
             while(numGuesses < 1 || numGuesses > 12) {
                 System.out.println("Please enter max number of guesses? (max 12) ");
                 numGuesses = input.nextInt();
@@ -193,6 +203,8 @@ public class Console {
 
     public static boolean compareCodeKids(char[] g, char[] s){
         //sort array and use search to improve efficiency
+
+        //if multiple colours only one true hint (2,3 or 4)
 
         int count=0;
 
