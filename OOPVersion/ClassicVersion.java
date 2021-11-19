@@ -9,17 +9,21 @@ public class ClassicVersion extends Game{
     private char[] solution = new char[4];
 
 
+    public ClassicVersion(){
+        super("Classic Version - No data");
+    }
     public ClassicVersion(char[] solution) {
         super("Classic Version");
         setSolution(solution);
     }
 
     public char[] getSolution() {
-        return solution;
+        return Arrays.copyOf(solution, solution.length);
     }
 
     public void setSolution(char[] solution) {
-        this.solution = solution;
+        if(solution != null)
+            this.solution = solution;
     }
 
     @Override

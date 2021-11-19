@@ -9,7 +9,14 @@ public class TestGame {
 
         KidsVersion kidsGame = new KidsVersion();
 
-        System.out.print(kidsGame + "\n" + Arrays.toString(kidsGame.getColours()));
+        ClassicVersion classicVersion = new ClassicVersion();
+
+        ExpertVersion expertVersion = new ExpertVersion();
+
+
+        System.out.println(kidsGame + "\n" + Arrays.toString(kidsGame.getColours()));
+        System.out.println(classicVersion + "\n" + Arrays.toString(classicVersion.getColours()));
+        System.out.println(expertVersion + "\n" + Arrays.toString(expertVersion.getColours()));
 
     }
 }

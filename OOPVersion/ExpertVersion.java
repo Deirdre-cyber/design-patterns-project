@@ -8,16 +8,21 @@ public class ExpertVersion extends Game{
 
     private char[] solution = new char[4];
 
+    public ExpertVersion(){
+        super("Expert Version - no data");
+    }
+
     public ExpertVersion(String version, char[] solution) {
         super("Expert Version");
-        this.solution = solution;
+        setSolution(solution);
     }
 
     public char[] getSolution() {
-        return solution;
+        return Arrays.copyOf(solution, solution.length);
     }
     public void setSolution(char[] solution) {
-        this.solution = solution;
+        if(solution != null)
+            this.solution = solution;
     }
 
     @Override
@@ -53,15 +58,19 @@ public class ExpertVersion extends Game{
         //ensure blank is checked
         char[] colours = getColours();
         ArrayList<Character> coloursList = new ArrayList<>();
-        coloursList.add('_');
+
 
         for (char colour : colours)
             coloursList.add(colour);
 
+        coloursList.add('_');
+        //set
         for (Character ch : coloursList) {
             if (ch == c)
                 return true;
         }
+
+
         return false;
     }
 

@@ -9,7 +9,7 @@ public class KidsVersion extends Game{
     private char[] solution = new char[4];
 
     public KidsVersion(){
-        super("Kids Version");
+        super("Kids Version - No data");
     }
 
     public KidsVersion(char[] solution) {
