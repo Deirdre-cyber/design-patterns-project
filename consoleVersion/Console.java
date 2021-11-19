@@ -8,29 +8,51 @@ public class Console {
 
     public static void main(String[] args) {
 
-        int choice;
+        String choiceAsString;
+        boolean valid;
+        int i, choice;
 
         Scanner input = new Scanner(System.in);
 
         System.out.println("Choose a Game Version\n1. Children\n2. Classic \n3. Expert\n4. Quit");
-        choice = input.nextInt();
+        choiceAsString = input.nextLine();
 
-        switch (choice){
-            case 1:
-                kids();
-                break;
-            case 2:
-                //classic();
-                break;
-            case 3:
-                //expert();
-            default:
-                System.out.print("Quitting now, goodbye.....");
+        valid = false;
+
+        while(!valid) {
+            for (i = 0; i < choiceAsString.length(); i++) {
+                if (!Character.isDigit(choiceAsString.charAt(i))) {
+                    break;
+                }
+            }
+            if (i == choiceAsString.length() && !choiceAsString.equals("")) {
+                choice = Integer.parseInt(choiceAsString);
+
+                if (choice >= 1 && choice <= 4) {
+                    valid = true;
+
+                    switch (choice){
+                        case 1:
+                            kids();
+                            break;
+                        case 2:
+                            //classic();
+                            break;
+                        case 3:
+                            //expert();
+                        default:
+                            System.out.print("Quitting now, goodbye.....");
+                    }
+                }
+            } else {
+                System.out.println("Invalid! Please choose a Game Version\n1. Children\n2. Classic \n3. Expert\n4. Quit");
+                choiceAsString = input.nextLine();
+            }
         }
 
         }
 
-    public static void kids() {
+    public static void kids() { //class
 
         String playerOne, playerTwo;
 
@@ -50,13 +72,13 @@ public class Console {
         System.out.println("Please enter your name Player Two: ");
         playerTwo = input.nextLine();
 
-        while (numGames != -1) {
+        while (numGames != gamesPlayed || numGames != -1) {
 
             solution = createCode(playerOne);
 
             System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-            while (numGuesses != -1) {
+            while (numGuesses != guessesMade || numGuesses != -1) {
 
                 equal = false;
 
@@ -66,8 +88,11 @@ public class Console {
                     guess = createCode(playerTwo);
 
 
+                    /*Arrays.sort(guess);
+                    Arrays.sort(solution);
+
                     for (int i = 0; i < guess.length; i++) {
-                        if (compareCodeKids(guess, solution))        //resolve issue below
+                        if (compareCodeKids(guess[i], solution[i]))        //resolve issue below
                             hints[i] = true;
                     }
 
@@ -82,12 +107,12 @@ public class Console {
                         equal = true;
                         numGuesses = -1;
                         numGames = -1;
-                    }
+                    }*/
+
                 }
-
-                gamesPlayed++;
+                guessesMade++;
             }
-
+            gamesPlayed++;
             //if won
             System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
         }
@@ -213,16 +238,8 @@ public class Console {
             return false;
         }
 
-    public static boolean compareCodeKids(char[] g, char[] s){
-        //sort array and use search to improve efficiency
+    public static boolean compareCodeKids(char g, char s){
 
-        int count=0;
-
-        for (char c : g) {
-            for (char value : s)
-                if (c == value)
-                    count++;
-        }
-        return count == g.length;
+        return g == s;
     }
     }
