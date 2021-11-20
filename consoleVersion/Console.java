@@ -19,7 +19,7 @@ public class Console {
 
         valid = false;
 
-        while(!valid) {
+        while (!valid) {
             for (i = 0; i < choiceAsString.length(); i++) {
                 if (!Character.isDigit(choiceAsString.charAt(i))) {
                     break;
@@ -31,7 +31,7 @@ public class Console {
                 if (choice >= 1 && choice <= 4) {
                     valid = true;
 
-                    switch (choice){
+                    switch (choice) {
                         case 1:
                             kids();
                             break;
@@ -50,7 +50,7 @@ public class Console {
             }
         }
 
-        }
+    }
 
     public static void kids() { //class
 
@@ -88,13 +88,10 @@ public class Console {
                     guess = createCode(playerTwo);
 
 
-                    /*Arrays.sort(guess);
-                    Arrays.sort(solution);
+                    hints = (compareCodeKids(guess, solution));
+                    System.out.print(Arrays.toString(guess) + Arrays.toString(hints));
 
-                    for (int i = 0; i < guess.length; i++) {
-                        if (compareCodeKids(guess[i], solution[i]))        //resolve issue below
-                            hints[i] = true;
-                    }
+                    /*
 
                     System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
@@ -108,6 +105,7 @@ public class Console {
                         numGuesses = -1;
                         numGames = -1;
                     }*/
+                    equal = true;
 
                 }
                 guessesMade++;
@@ -166,80 +164,109 @@ public class Console {
 
         }*/
 
-        public static int numberValidator(String s){
+    public static int numberValidator(String s) {
 
-            String numAsString;
-            int num = 0;
-            boolean valid;
-            int i;
+        String numAsString;
+        int num = 0;
+        boolean valid;
+        int i;
 
-            Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
 
-            System.out.println("How many " + s + " would you like to play? (max 10) ");
-            numAsString = input.nextLine();
+        System.out.println("How many " + s + " would you like to play? (max 10) ");
+        numAsString = input.nextLine();
 
-            valid = false;
-            while(!valid) {
-                for (i = 0; i < numAsString.length(); i++) {
-                    if (!Character.isDigit(numAsString.charAt(i))) {
-                        break;
-                    }
-                }
-                if (i == numAsString.length() && !numAsString.equals("")) {
-                    num = Integer.parseInt(numAsString);
-
-                    if (num >= 1 && num <= 10) {
-                        valid = true;
-                    }
-                } else {
-                    System.out.println("Invalid! How many " + s + " would you like to play? (max 10) ");
-                    numAsString = input.nextLine();
+        valid = false;
+        while (!valid) {
+            for (i = 0; i < numAsString.length(); i++) {
+                if (!Character.isDigit(numAsString.charAt(i))) {
+                    break;
                 }
             }
+            if (i == numAsString.length() && !numAsString.equals("")) {
+                num = Integer.parseInt(numAsString);
 
-            return num;
+                if (num >= 1 && num <= 10) {
+                    valid = true;
+                }
+            } else {
+                System.out.println("Invalid! How many " + s + " would you like to play? (max 10) ");
+                numAsString = input.nextLine();
+            }
         }
 
-        public static char[] createCode(String play){
+        return num;
+    }
 
-            char colour;
-            char[] s = new char[4];
+    public static char[] createCode(String play) {
 
-            Scanner input = new Scanner(System.in);
+        char colour;
+        char[] s = new char[4];
 
-            System.out.println("Welcome " + play);
+        Scanner input = new Scanner(System.in);
 
-            for(int i = 0; i < 4; i++){
+        System.out.println("Welcome " + play);
 
-                System.out.println("Please enter colour " + (i + 1) + " ");
+        for (int i = 0; i < 4; i++) {
+
+            System.out.println("Please enter colour " + (i + 1) + " ");
+            colour = input.next().charAt(0);
+
+            while (!validateColour(colour) || !Character.isLetter(colour)) {
+                System.out.println("Invalid colour. Please enter a valid colour for colour " + (i + 1) + " ");
                 colour = input.next().charAt(0);
+            }
+            s[i] = colour;
+        }
+        return s;
+    }
 
-                while(!validateColour(colour) || !Character.isLetter(colour)){
-                    System.out.println("Invalid colour. Please enter a valid colour for colour " + (i + 1) + " ");
-                    colour = input.next().charAt(0);
+    public static boolean validateColour(char c) {
+
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
+        ArrayList<Character> coloursList = new ArrayList<>();
+
+        for (char colour : colours)
+            coloursList.add(colour);
+
+        for (Character ch : coloursList) {
+            if (ch == c)
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean[] compareCodeKids(char[] g, char[] s) {
+
+        boolean[] h = new boolean[4];
+        int x, y;
+
+        for (x = 0; x < g.length; x++) {
+            for (y = 0; y < s.length; y++) {
+                if (g[x] == s[y]) {
+                    h[x] = true;
                 }
-                s[i] = colour;
             }
-            return s;
         }
+        return h;
+    }
+    public static int[] compareCodeClassic( char[] g, char[] s){
 
-        public static boolean validateColour(char c){
+        int [] h = {0, 0, 0, 0};
+        int x, y;
 
-            char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
-            ArrayList<Character> coloursList = new ArrayList<>();
-
-            for (char colour : colours)
-                coloursList.add(colour);
-
-            for (Character ch : coloursList) {
-                if (ch == c)
-                    return true;
+        for(x = 0; x < g.length; x++){
+            for(y = 0; y <s.length; y++){
+                if(g[x] == s[y]){
+                    if(x == y){
+                        h[x] = 1;
+                    }
+                    else
+                        h[x] = 2;
+                }
             }
-            return false;
         }
-
-    public static boolean compareCodeKids(char g, char s){
-
-        return g == s;
+        return h;
     }
-    }
+
+}
