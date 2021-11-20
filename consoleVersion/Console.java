@@ -60,47 +60,40 @@ public class Console {
 
     public static void kids(String playerOne, String playerTwo) { //class
 
-
         int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed = 0, guessesMade = 0;
         char[] solution;
-
         boolean[] hints = {false, false, false, false};
-        boolean equal;
         char[] guess = {'_', '_', '_', '_'};
 
-        while (numGames != gamesPlayed || numGames != -1) {
+        while (numGames != gamesPlayed && numGames != -1) {
 
             solution = createCode(playerOne);
 
             System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-            while (numGuesses != guessesMade || numGuesses != -1) {
 
-                equal = false;
+            while (numGuesses != guessesMade && numGuesses != -1) {
 
-                /*while (!equal) {
-
-                    System.out.println("\nGuess " + (guessesMade + 1));
+                    System.out.println("\nGuess " + (guessesMade+1));
                     guess = createCode(playerTwo);
 
+                    hints = compareCodeKids(guess, solution);   //why are hints changing
 
-                    hints = compareCodeKids(guess, solution);
-                    System.out.print(Arrays.toString(guess) + Arrays.toString(hints));
+                    System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
 
                     if(checkWin(hints)){
-                        equal = true;
                         numGuesses = -1;
                         numGames = -1;
-
+                        break;
                     }
-
-                }*/
-                guessesMade++;
+                    guessesMade++;
             }
             gamesPlayed++;
-            //if won
-            System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
         }
+            System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
+            //if won
+            //System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + "lost. Better Look next time!");
+
     }
 
     /*public static void classic(){
@@ -192,7 +185,7 @@ public class Console {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Welcome " + play);
+        System.out.println("Your turn " + play);
 
         for (int i = 0; i < 4; i++) {
 
@@ -227,7 +220,6 @@ public class Console {
 
         boolean[] h = new boolean[4];
         int x, y;
-
 
         for (x = 0; x < g.length; x++) {
             for (y = 0; y < s.length; y++) {
