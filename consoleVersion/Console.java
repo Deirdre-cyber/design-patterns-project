@@ -78,7 +78,7 @@ public class Console {
 
                     guess = createCode(playerTwo);
 
-                    hints = compareCodeKids(guess, solution);   //why are hints changing on second run?
+                    hints = compareCodeKids(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));   //why are hints changing on second run?
 
                     System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
 
