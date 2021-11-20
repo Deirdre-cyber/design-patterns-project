@@ -75,9 +75,10 @@ public class Console {
             while (numGuesses != guessesMade && numGuesses != -1) {
 
                     System.out.println("\nGuess " + (guessesMade+1));
+
                     guess = createCode(playerTwo);
 
-                    hints = compareCodeKids(guess, solution);   //why are hints changing
+                    hints = compareCodeKids(guess, solution);   //why are hints changing on second run?
 
                     System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
 
@@ -90,7 +91,10 @@ public class Console {
             }
             gamesPlayed++;
         }
-            System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
+            if(numGuesses == -1 && numGames == -1)
+                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
+            else
+                System.out.println("Game over");
             //if won
             //System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + "lost. Better Look next time!");
 
