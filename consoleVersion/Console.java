@@ -8,11 +8,17 @@ public class Console {
 
     public static void main(String[] args) {
 
-        String choiceAsString;
+        String choiceAsString, playerOne, playerTwo;
         boolean valid;
         int i, choice;
 
         Scanner input = new Scanner(System.in);
+
+        System.out.println("Please enter your name Player One: ");
+        playerOne = input.nextLine();
+
+        System.out.println("Please enter your name Player Two: ");
+        playerTwo = input.nextLine();
 
         System.out.println("Choose a Game Version\n1. Children\n2. Classic \n3. Expert\n4. Quit");
         choiceAsString = input.nextLine();
@@ -33,7 +39,7 @@ public class Console {
 
                     switch (choice) {
                         case 1:
-                            kids();
+                            kids(playerOne, playerTwo);
                             break;
                         case 2:
                             //classic();
@@ -52,11 +58,8 @@ public class Console {
 
     }
 
-    public static void kids() { //class
+    public static void kids(String playerOne, String playerTwo) { //class
 
-        String playerOne, playerTwo;
-
-        Scanner input = new Scanner(System.in);
 
         int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed = 0, guessesMade = 0;
         char[] solution;
@@ -64,13 +67,6 @@ public class Console {
         boolean[] hints = {false, false, false, false};
         boolean equal;
         char[] guess = {'_', '_', '_', '_'};
-        int count = 0;
-
-        System.out.println("Please enter your name Player One: ");
-        playerOne = input.nextLine();
-
-        System.out.println("Please enter your name Player Two: ");
-        playerTwo = input.nextLine();
 
         while (numGames != gamesPlayed || numGames != -1) {
 
@@ -82,32 +78,23 @@ public class Console {
 
                 equal = false;
 
-                while (!equal) {
+                /*while (!equal) {
 
-                    System.out.println("Guess " + (guessesMade + 1));
+                    System.out.println("\nGuess " + (guessesMade + 1));
                     guess = createCode(playerTwo);
 
 
-                    hints = (compareCodeKids(guess, solution));
+                    hints = compareCodeKids(guess, solution);
                     System.out.print(Arrays.toString(guess) + Arrays.toString(hints));
 
-                    /*
-
-                    System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
-
-                    for (boolean hint : hints) {
-                        if (hint)
-                            count++;
-                    }
-
-                    if (count == 4) {
+                    if(checkWin(hints)){
                         equal = true;
                         numGuesses = -1;
                         numGames = -1;
-                    }*/
-                    equal = true;
 
-                }
+                    }
+
+                }*/
                 guessesMade++;
             }
             gamesPlayed++;
@@ -116,29 +103,29 @@ public class Console {
         }
     }
 
-        /*public static void classic(){
+    /*public static void classic(){
 
-            int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
-            char[] solution = new char[4];
+        int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
+        char[] solution = new char[4];
 
-            int[] hints = {1, 2, 3};
-            char[] guess = new char[4];
+        int[] hints = {1, 2, 3};
+        char[] guess = new char[4];
 
-            while (gamesPlayed <= numGames) {
+        while (gamesPlayed <= numGames) {
 
-                solution = playerOneCode();
+            solution = playerOneCode();
 
-                while (guessesMade <= numGuesses){
+            while (guessesMade <= numGuesses){
 
-                    guessesMade++;
-                }
-
-                //game starts
-
-                gamesPlayed++;
+                guessesMade++;
             }
 
-        }
+            //game starts
+
+            gamesPlayed++;
+         }
+
+       }
 
         public static void expert(){
 
@@ -241,32 +228,48 @@ public class Console {
         boolean[] h = new boolean[4];
         int x, y;
 
+
         for (x = 0; x < g.length; x++) {
             for (y = 0; y < s.length; y++) {
                 if (g[x] == s[y]) {
                     h[x] = true;
+                    s[y] = 'X';
+                    break;
                 }
             }
         }
         return h;
     }
-    public static int[] compareCodeClassic( char[] g, char[] s){
+    public static int[] compareCodeClassic(char[] g, char[] s){ //reuse for expert with added extra colour
 
         int [] h = {0, 0, 0, 0};
         int x, y;
 
-        for(x = 0; x < g.length; x++){
-            for(y = 0; y <s.length; y++){
-                if(g[x] == s[y]){
+        for(x = 0; x < s.length; x++){
+            for(y = 0; y < g.length; y++){
+                if(s[x] == g[y]){
                     if(x == y){
-                        h[x] = 1;
+                        h[y] = 1;
+                        g[x] = 'X';
+                        break;
                     }
-                    else
-                        h[x] = 2;
+                    else if (y == 4){
+                        h[y-1] = 2;
+                    }
                 }
             }
         }
         return h;
     }
+    public static boolean checkWin(boolean[] h){
 
+        int count = 0;
+
+        for (boolean hint : h) {
+            if (hint)
+                count++;
+        }
+        return count == 4;
+
+    }
 }
