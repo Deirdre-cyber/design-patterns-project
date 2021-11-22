@@ -6,6 +6,7 @@ public class TestGame {
 
     public static void main(String[] args) {
 
+        //
 
         KidsVersion kidsGame = new KidsVersion();
 
