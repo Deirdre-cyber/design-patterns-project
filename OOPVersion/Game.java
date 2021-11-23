@@ -3,13 +3,16 @@ package OOPVersion;
 
 import java.util.Arrays;
 
-public abstract class Game {
+public abstract class Game {        //change to interface with three methods ???
 
     private String version;
     public char[] guess = {'_','_','_','_'};
     public boolean[] hints  = {false, false, false, false};
     private char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
 
+    public Game(String version) {
+        setVersion(version);
+    }
 
     public char[] getGuess() {
         return Arrays.copyOf(guess, guess.length);
@@ -27,10 +30,9 @@ public abstract class Game {
             this.hints = Arrays.copyOf(hints, hints.length);
     }
 
-    public Game(String version) {
-        setVersion(version);
+    public String getVersion() {
+        return version;
     }
-
     public void setVersion(String version) {
         this.version = version;
     }
@@ -45,5 +47,5 @@ public abstract class Game {
 
     public abstract char[] createCode(String play);
     public abstract boolean validateColour(char c);
-    public abstract boolean compareCode(char[] g, char[] s);
+    public abstract int[] compareCode(char[] g, char[] s);
 }

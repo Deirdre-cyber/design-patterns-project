@@ -4,30 +4,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ExpertVersion extends Game{
+public class VersionKids extends Game{
 
     private char[] solution = new char[4];
 
-    public ExpertVersion(){
-        super("Expert Version - no data");
+    public VersionKids(){
+        super("Kids Version - No data");
     }
 
-    public ExpertVersion(String version, char[] solution) {
-        super("Expert Version");
+    public VersionKids(char[] solution) {
+        super("Kids Version");
         setSolution(solution);
     }
 
-    public char[] getSolution() {
-        return Arrays.copyOf(solution, solution.length);
-    }
     public void setSolution(char[] solution) {
         if(solution != null)
             this.solution = solution;
     }
+    public char[] getSolution(){
+        return Arrays.copyOf(solution, solution.length);
+    }
 
     @Override
     public String toString() {
-        return "Expert Game";
+        return "Guess: " + Arrays.toString(getGuess()) + "\t\tHints: " + Arrays.toString(getHints());
     }
 
     public char[] createCode(String play){
@@ -54,39 +54,36 @@ public class ExpertVersion extends Game{
     }
 
     public boolean validateColour(char c){
-        //check colour chosen is in colour list
-        //ensure blank is checked
+    //check colour chosen is in colour list
         char[] colours = getColours();
         ArrayList<Character> coloursList = new ArrayList<>();
-
 
         for (char colour : colours)
             coloursList.add(colour);
 
-        coloursList.add('_');
-        //set
         for (Character ch : coloursList) {
             if (ch == c)
                 return true;
         }
-
-
         return false;
     }
 
-    public boolean compareCode(char[] g, char[] s){
-        //sort array and use search to improve efficiency
-        //if colours are all the same....??
+    public int[] compareCode(char[] g, char[] s) {
 
-        //extra colour, same position and only one mark if multiple colours
+        int[] h = {0, 0, 0, 0};
+        int x, y;
 
-        int count=0;
-
-        for (char c : g) {
-            for (char value : s)
-                if (c == value)
-                    count++;
+        for (x = 0; x < g.length; x++) {
+            for (y = 0; y < s.length; y++) {
+                if (g[x] == s[y]) {
+                    h[x] = 1;
+                    s[y] = 'X';
+                    break;
+                }
+            }
         }
-        return count == g.length;
+        return h;
     }
+
+
 }

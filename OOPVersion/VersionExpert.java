@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ClassicVersion extends Game{
+public class VersionExpert extends Game{
 
     private char[] solution = new char[4];
 
-
-    public ClassicVersion(){
-        super("Classic Version - No data");
+    public VersionExpert(){
+        super("Expert Version - no data");
     }
-    public ClassicVersion(char[] solution) {
-        super("Classic Version");
+
+    public VersionExpert(String version, char[] solution) {
+        super("Expert Version");
         setSolution(solution);
     }
 
     public char[] getSolution() {
         return Arrays.copyOf(solution, solution.length);
     }
-
     public void setSolution(char[] solution) {
         if(solution != null)
             this.solution = solution;
@@ -28,7 +27,7 @@ public class ClassicVersion extends Game{
 
     @Override
     public String toString() {
-        return "Classic Game";
+        return "Expert Game";
     }
 
     public char[] createCode(String play){
@@ -56,31 +55,44 @@ public class ClassicVersion extends Game{
 
     public boolean validateColour(char c){
         //check colour chosen is in colour list
+        //ensure blank is checked
         char[] colours = getColours();
         ArrayList<Character> coloursList = new ArrayList<>();
+
 
         for (char colour : colours)
             coloursList.add(colour);
 
+        coloursList.add('_');
+        //set
         for (Character ch : coloursList) {
             if (ch == c)
                 return true;
         }
+
+
         return false;
     }
 
-    public boolean compareCode(char[] g, char[] s){
-        //sort array and use search to improve efficiency
-        //if colours are all the same....??
-        //change to check position
+    public int[] compareCode(char[] g, char[] s){ //reuse for expert with added extra colour
 
-        int count=0;
+        int [] h = {0, 0, 0, 0};
+        int x, y;
 
-        for (char c : g) {
-            for (char value : s)
-                if (c == value)
-                    count++;
+        for(x = 0; x < s.length; x++){
+            for(y = 0; y < g.length; y++){
+                if(s[x] == g[y]){
+                    if(x == y){
+                        h[y] = 1;
+                        g[x] = 'X';
+                        break;
+                    }
+                    else if (y == 4){
+                        h[y-1] = 2;
+                    }
+                }
+            }
         }
-        return count == g.length;
+        return h;
     }
 }
