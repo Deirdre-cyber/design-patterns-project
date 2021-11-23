@@ -8,6 +8,8 @@ public class BoardGUI extends JFrame{
     public BoardGUI(){
         super("MASTERMIND");
 
+        //Make board
+
         BorderLayout layout = new BorderLayout(5,5);
         setLayout(layout);
 
