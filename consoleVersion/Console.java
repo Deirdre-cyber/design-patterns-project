@@ -42,10 +42,10 @@ public class Console {
                             kids(playerOne, playerTwo);
                             break;
                         case 2:
-                            //classic();
+                            classic(playerOne, playerTwo);
                             break;
                         case 3:
-                            //expert();
+                            expert(playerOne, playerTwo);
                         default:
                             System.out.print("Quitting now, goodbye.....");
                     }
@@ -58,7 +58,7 @@ public class Console {
 
     }
 
-    public static void kids(String playerOne, String playerTwo) { //class
+    public static void kids(String playerOne, String playerTwo) { //class?
 
         int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed = 0, guessesMade = 0;
         char[] solution;
@@ -78,7 +78,9 @@ public class Console {
 
                     guess = createCode(playerTwo);
 
-                    hints = compareCodeKids(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));   //why are hints changing on second run?
+                    ++guessesMade;
+
+                    hints = compareCodeKids(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
 
                     System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
 
@@ -87,66 +89,97 @@ public class Console {
                         numGames = -1;
                         break;
                     }
-                    guessesMade++;
             }
             gamesPlayed++;
         }
             if(numGuesses == -1 && numGames == -1)
-                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guesses, Congratulations!");
+                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
             else
                 System.out.println("Game over");
-            //if won
-            //System.out.print(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + "lost. Better Look next time!");
-
     }
 
-    /*public static void classic(){
+    public static void classic(String playerOne, String playerTwo){
 
-        int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
-        char[] solution = new char[4];
+        int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
+        char[] solution;
 
-        int[] hints = {1, 2, 3};
+        int[] hints = {0, 0, 0, 0};
         char[] guess = new char[4];
 
-        while (gamesPlayed <= numGames) {
+        while (numGames != gamesPlayed && numGames != -1) {
 
-            solution = playerOneCode();
+            solution = createCode(playerOne);
 
-            while (guessesMade <= numGuesses){
+            System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                guessesMade++;
+
+            while (numGuesses != guessesMade && numGuesses != -1) {
+
+                    System.out.println("\nGuess " + (guessesMade+1));
+
+                    guess = createCode(playerTwo);
+
+                    ++guessesMade;
+
+                    hints = compareCodeClassic(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
+
+                    System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
+
+                    if(checkWinClassic(hints)){
+                        numGuesses = -1;
+                        numGames = -1;
+                        break;
+                    }
             }
-
-            //game starts
-
             gamesPlayed++;
-         }
+        }
+            if(numGuesses == -1 && numGames == -1)
+                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+            else
+                System.out.println("Game over");
 
        }
 
-        public static void expert(){
+        public static void expert(String playerOne, String playerTwo){
 
-            int numGames = Games(), numGuesses = Guesses(), gamesPlayed=0, guessesMade = 0;
-            char[] solution = new char[5];  //how to use validate code, need to add extra 'E' for empty
+            int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
+            char[] solution;
 
-            int[] hints = {1, 2, 3};
+            int[] hints = {0, 0, 0, 0};
             char[] guess = new char[4];
 
-            while (gamesPlayed <= numGames) {
+            while (numGames != gamesPlayed && numGames != -1) {
 
-                solution = playerOneCode();
+                solution = createCodeExpert(playerOne);
 
-                while (guessesMade <= numGuesses){
+                System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
 
-                    guessesMade++;
+                while (numGuesses != guessesMade && numGuesses != -1) {
+
+                    System.out.println("\nGuess " + (guessesMade+1));
+
+                    guess = createCodeExpert(playerTwo);
+
+                    ++guessesMade;
+
+                    hints = compareCodeClassic(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
+
+                    System.out.println(Arrays.toString(guess) + Arrays.toString(hints));
+
+                    if(checkWinClassic(hints)){
+                        numGuesses = -1;
+                        numGames = -1;
+                        break;
+                    }
                 }
-
-                //game starts
-
                 gamesPlayed++;
             }
+            if(numGuesses == -1 && numGames == -1)
+                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+            else
+                System.out.println("Game over");
 
-        }*/
+        }
 
     public static int numberValidator(String s) {
 
@@ -205,9 +238,47 @@ public class Console {
         return s;
     }
 
+    public static char[] createCodeExpert(String play) {
+
+        char colour;
+        char[] s = new char[4];
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Your turn " + play);
+
+        for (int i = 0; i < 4; i++) {
+
+            System.out.println("Please enter colour " + (i + 1) + " ");
+            colour = input.next().charAt(0);
+
+            while (!validateColourExpert(colour) || !Character.isLetter(colour)) {
+                System.out.println("Invalid colour. Please enter a valid colour for colour " + (i + 1) + " ");
+                colour = input.next().charAt(0);
+            }
+            s[i] = colour;
+        }
+        return s;
+    }
+
     public static boolean validateColour(char c) {
 
         char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
+        ArrayList<Character> coloursList = new ArrayList<>();
+
+        for (char colour : colours)
+            coloursList.add(colour);
+
+        for (Character ch : coloursList) {
+            if (ch == c)
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean validateColourExpert(char c) {
+
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v', 'K'};
         ArrayList<Character> coloursList = new ArrayList<>();
 
         for (char colour : colours)
@@ -267,5 +338,16 @@ public class Console {
         }
         return count == 4;
 
+    }
+
+    public static boolean checkWinClassic(int[] h){
+
+        int count = 0;
+
+        for (int hint : h) {
+            if (hint == 1)
+                count++;
+        }
+        return count == 4;
     }
 }

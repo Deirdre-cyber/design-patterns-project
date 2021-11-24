@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Respresents a Player invoved in a Game.
+ * A player can play multiple games*/
+
 public class Player{
 
     //Mental Block converting from procedural console to OOP GUI - starting over.......
@@ -11,9 +15,20 @@ public class Player{
     private String name;
     private static int wins = 0;
     private char[] code;
+    private boolean playerTurn = false;
 
-    public Player(String name) {
+    public Player(String name, int wins, char[] code, boolean playerTurn) {
         setName(name);
+        setWins(wins);
+        setCode(code);
+        setPlayerTurn(playerTurn);
+    }
+
+    public boolean isPlayerTurn() {
+        return playerTurn;
+    }
+    public void setPlayerTurn(boolean playerTurn) {
+        this.playerTurn = playerTurn;
     }
 
     public char[] getCode() {
@@ -24,6 +39,7 @@ public class Player{
 
         if(!getName().equals("Computer")){
             JOptionPane.showMessageDialog(null, "Your turn " + getName());
+            playerTurn = true;
 
             for(int i = 0; i < 4; i++){
 
