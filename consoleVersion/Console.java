@@ -1,5 +1,6 @@
 package consoleVersion;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -8,17 +9,49 @@ public class Console {
 
     public static void main(String[] args) {
 
-        String choiceAsString, playerOne, playerTwo;
+        String choiceAsString, player, playerOne = "", playerTwo = "";
         boolean valid;
         int i, choice;
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Please enter your name Player One: ");
-        playerOne = input.nextLine();
+        System.out.println("Press start to enter...");
 
-        System.out.println("Please enter your name Player Two: ");
-        playerTwo = input.nextLine();
+        //Only to be added to leaderboard if they are higher than top 3 highest scores
+        System.out.println("1. SINGLE PLAYER\n2. MULTIPLAYER\n3. QUIT");
+        player =input.nextLine();
+
+        valid = false;
+
+        while(!valid){
+
+            if(player.equals("1")){
+
+                System.out.print("Please enter your name Player One: ");
+                playerOne = input.nextLine();
+                //Player player1 = new Player(playerOne);
+                //Player player2 = new Player("Computer");
+                valid= true;
+            }
+            else if (player.equals("2")){
+
+                System.out.print("Please enter your name Player One: ");
+                playerOne = input.nextLine();
+                //Player player1 = new Player(playerOne);
+
+                System.out.print("Please enter your name Player Two: ");
+                playerTwo = input.nextLine();
+                //Player player2 = new Player(playerTwo);
+                valid= true;
+            }
+            else if (player.equals("3")) {
+                JOptionPane.showMessageDialog(null, "Quitting now, goodbye.....", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            }
+            else
+                player = JOptionPane.showInputDialog("INVALID!!\n\n1. Single Player\n\n2. Multiplayer\n\n3. Quit");
+
+        }
 
         System.out.println("Choose a Game Version\n1. Children\n2. Classic \n3. Expert\n4. Quit");
         choiceAsString = input.nextLine();
@@ -55,30 +88,41 @@ public class Console {
                 choiceAsString = input.nextLine();
             }
         }
-
     }
 
     public static void kids(String playerOne, String playerTwo) { //class?
 
         int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed = 0, guessesMade = 0;
+        int playOneWins = 0, playTwoWins = 0, playOneGames=0, playTwoGames=0;
         char[] solution;
         boolean[] hints = {false, false, false, false};
         char[] guess = {'_', '_', '_', '_'};
+        String codeMaker, codeBreaker=null;
 
         while (numGames != gamesPlayed && numGames != -1) {
 
-            solution = createCode(playerOne);
+            if(gamesPlayed%2 == 0){
+                codeMaker = playerOne;
+                codeBreaker = playerTwo;
+
+            }
+            else {
+                codeMaker = playerTwo;
+                codeBreaker = playerOne;
+            }
+
+            solution = createCode(codeMaker);
 
             System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
-
+            guessesMade=0;
 
             while (numGuesses != guessesMade && numGuesses != -1) {
 
                     System.out.println("\nGuess " + (guessesMade+1));
 
-                    guess = createCode(playerTwo);
+                    guess = createCode(codeBreaker);
 
-                    ++guessesMade;
+                    guessesMade++;
 
                     hints = compareCodeKids(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
 
@@ -86,40 +130,67 @@ public class Console {
 
                     if(checkWin(hints)){
                         numGuesses = -1;
-                        numGames = -1;
                         break;
                     }
             }
             gamesPlayed++;
+
+            if(numGuesses == -1) {
+                System.out.println(codeBreaker + " won in " + guessesMade + " guess(es), well done.");
+                numGuesses=0;
+                if(codeBreaker.equals(playerOne))
+                    playOneWins++;
+                else
+                    playTwoWins++;
+            }
+            else
+                System.out.println(codeBreaker + " you lost this round....");
         }
-            if(numGuesses == -1 && numGames == -1)
-                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+            if(numGuesses == -1 && gamesPlayed == numGames)
+                System.out.println(codeBreaker + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
             else
                 System.out.println("Game over");
+
+        playOneGames+=gamesPlayed;
+        playTwoGames+=gamesPlayed;
+
+        System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
+        System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
     }
 
     public static void classic(String playerOne, String playerTwo){
 
         int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
         char[] solution;
-
+        int playOneWins=0, playTwoWins=0, playOneGames=0, playTwoGames=0;
         int[] hints = {0, 0, 0, 0};
         char[] guess = new char[4];
+        String codeMaker, codeBreaker = null;
 
         while (numGames != gamesPlayed && numGames != -1) {
 
-            solution = createCode(playerOne);
+            if(gamesPlayed%2 == 0){
+                codeMaker = playerOne;
+                codeBreaker = playerTwo;
+
+            }
+            else {
+                codeMaker = playerTwo;
+                codeBreaker = playerOne;
+            }
+
+            solution = createCode(codeMaker);
 
             System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
-
+            guessesMade=0;
 
             while (numGuesses != guessesMade && numGuesses != -1) {
 
                     System.out.println("\nGuess " + (guessesMade+1));
 
-                    guess = createCode(playerTwo);
+                    guess = createCode(codeBreaker);
 
-                    ++guessesMade;
+                    guessesMade++;
 
                     hints = compareCodeClassic(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
 
@@ -127,16 +198,32 @@ public class Console {
 
                     if(checkWinClassic(hints)){
                         numGuesses = -1;
-                        numGames = -1;
                         break;
                     }
             }
             gamesPlayed++;
-        }
-            if(numGuesses == -1 && numGames == -1)
-                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+
+            if(numGuesses == -1) {
+                System.out.println(codeBreaker + " won in " + guessesMade + " guess(es), well done.");
+                numGuesses=0;
+                if(codeBreaker.equals(playerOne))
+                    playOneWins++;
+                else
+                    playTwoWins++;
+            }
             else
-                System.out.println("Game over");
+                System.out.println(codeBreaker + " you lost this round....");
+        }
+        if(numGuesses == -1 && gamesPlayed == numGames)
+            System.out.println(codeBreaker + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+        else
+            System.out.println("Game over");
+
+        playOneGames+=gamesPlayed;
+        playTwoGames+=gamesPlayed;
+
+        System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
+        System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
 
        }
 
@@ -144,23 +231,35 @@ public class Console {
 
             int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
             char[] solution;
-
+            int playOneWins=0, playTwoWins=0, playOneGames=0, playTwoGames=0;
             int[] hints = {0, 0, 0, 0};
             char[] guess = new char[4];
+            String codeMaker, codeBreaker=null;
 
             while (numGames != gamesPlayed && numGames != -1) {
 
-                solution = createCodeExpert(playerOne);
+                if(gamesPlayed%2 == 0){
+                    codeMaker = playerOne;
+                    codeBreaker = playerTwo;
+
+                }
+                else {
+                    codeMaker = playerTwo;
+                    codeBreaker = playerOne;
+                }
+
+                solution = createCodeExpert(codeMaker);
 
                 System.out.println(Arrays.toString(guess) + " " + Arrays.toString(hints));
+                guessesMade=0;
 
                 while (numGuesses != guessesMade && numGuesses != -1) {
 
                     System.out.println("\nGuess " + (guessesMade+1));
 
-                    guess = createCodeExpert(playerTwo);
+                    guess = createCodeExpert(codeBreaker);
 
-                    ++guessesMade;
+                    guessesMade++;
 
                     hints = compareCodeClassic(Arrays.copyOf(guess, guess.length), Arrays.copyOf(solution, solution.length));
 
@@ -173,11 +272,28 @@ public class Console {
                     }
                 }
                 gamesPlayed++;
+
+                if(numGuesses == -1) {
+                    System.out.println(codeBreaker + " won in " + guessesMade + " guess(es), well done.");
+                    numGuesses=0;
+                    if(codeBreaker.equals(playerOne))
+                        playOneWins++;
+                    else
+                        playTwoWins++;
+                }
+                else
+                    System.out.println(codeBreaker + " you lost this round....");
             }
-            if(numGuesses == -1 && numGames == -1)
-                System.out.println(playerTwo + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
+            if(numGuesses == -1 && gamesPlayed == numGames)
+                System.out.println(codeBreaker + " played " + gamesPlayed + " game(s) and" + " won in " + guessesMade + " guess(es), Congratulations!");
             else
                 System.out.println("Game over");
+
+            playOneGames+=gamesPlayed;
+            playTwoGames+=gamesPlayed;
+
+            System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
+            System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
 
         }
 
@@ -238,6 +354,37 @@ public class Console {
         return s;
     }
 
+    public static char[] createCodeComputerKids(String play) {
+
+        int num;
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
+        char[] s = new char[4];
+
+        System.out.println("Your turn " + play);
+
+        for (int i = 0; i < 4; i++) {
+            num = (int)(Math.random()*7);
+
+            s[i] = colours[num];
+        }
+        return s;
+    }
+
+    public static char[] createCodeComputerExpert(String play) {
+
+        int num;
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v', 'K'};
+        char[] s = new char[4];
+
+        System.out.println("Your turn " + play);
+
+        for (int i = 0; i < 4; i++) {
+            num = (int)(Math.random()*8);
+            s[i] = colours[num];
+        }
+        return s;
+    }
+
     public static char[] createCodeExpert(String play) {
 
         char colour;
@@ -260,6 +407,7 @@ public class Console {
         }
         return s;
     }
+
 
     public static boolean validateColour(char c) {
 
@@ -350,4 +498,7 @@ public class Console {
         }
         return count == 4;
     }
+    //code for Computer to guess - kids(picks random colours and disregards hints)
+    //code for Computer to guess - classic(picks random colours and 'uses' hints)
+    //code for Computer to guess - expert(uses algorithm to solve in >5 goes)
 }

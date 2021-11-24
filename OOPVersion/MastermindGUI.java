@@ -11,7 +11,7 @@ public class MastermindGUI extends JFrame{
 
     public MastermindGUI(){
         super("MASTERMIND");
-
+        //Needs to be cleaned up a lot - basic messy GUI
         JPanel board = new JPanel();
         board.setLayout(new BoxLayout(board, BoxLayout.Y_AXIS));
         board.setBackground(Color.ORANGE);
@@ -45,8 +45,8 @@ public class MastermindGUI extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.print("Play Game");
-                //Choose players
-                //Choose difficulty level
+                //Choose players??
+                //Choose difficulty level??
             }
         });
 
