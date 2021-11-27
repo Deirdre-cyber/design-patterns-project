@@ -8,7 +8,9 @@ import java.awt.event.MouseListener;
 
 public class GameBoardGUI extends JFrame /*, KeyListener*/ {
 
-    JButton[] guessButtons;
+    private JButton[] guessButtons;
+    private JPanel colourButtonPanel, playPanel;
+    private int guessEventCount=0;
 
     public GameBoardGUI(){
         super("MASTERMIND");
@@ -27,6 +29,9 @@ public class GameBoardGUI extends JFrame /*, KeyListener*/ {
         setResizable(false);
         setVisible(true);
     }
+    //GETTERS AND SETTERS
+
+
     private JPanel createGameBoard(){
 
         JPanel gameBoard = new JPanel(new GridLayout(1, 2));
@@ -93,24 +98,20 @@ public class GameBoardGUI extends JFrame /*, KeyListener*/ {
     }
     private JPanel createPlayBoard(){
 
-        JPanel playPanel = new JPanel(new GridLayout(5, 1));
-        //panel.setSize(100, 600);
+        playPanel = new JPanel(new GridLayout(5, 1));
         playPanel.setBackground(Color.GRAY);
 
         JLabel placeholder = new JLabel("   ");
         playPanel.add(placeholder);
 
-        JPanel colourButtonPanel = new JPanel(new GridLayout(4, 2));
+        colourButtonPanel = new JPanel(new GridLayout(4, 2));
         colourButtonPanel.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.WHITE));
 
         JButton[] colourButtons = new JButton[8];
-        //make label same colour as button so not seen
-        //String[] colours = {"white", "yellow", "green", "red", "blue", "pink", "cyan", "orange"};
         Color[] buttonColours = {Color.WHITE, Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE, Color.PINK, Color.CYAN, Color.ORANGE};
 
         for(int i = 0; i < colourButtons.length; i++){
             colourButtons[i] = new JButton();
-            //colourButtons[i].add(new JLabel(colours[i]));
             colourButtons[i].setBackground(buttonColours[i]);
             colourButtons[i].setForeground(buttonColours[i]);
             colourButtons[i].setBorder(BorderFactory.createMatteBorder(2,2,2,2, Color.GRAY));
@@ -118,9 +119,14 @@ public class GameBoardGUI extends JFrame /*, KeyListener*/ {
                 @Override
                 public void mousePressed(MouseEvent e) {
 
-                    for(int i = 0; i < guessButtons.length; i++){
-                        guessButtons[i].setBackground(((JButton)e.getSource()).getBackground());
+                    if(guessEventCount < guessButtons.length)
+                        guessButtons[guessEventCount].setBackground(((JButton)e.getSource()).getBackground());
+                    else {
+                        System.out.print(guessEventCount);
+                        guessEventCount = 0;
                     }
+
+                    guessEventCount++;
                 }
             });
             colourButtonPanel.add(colourButtons[i]);
@@ -137,10 +143,19 @@ public class GameBoardGUI extends JFrame /*, KeyListener*/ {
 
         for(int i = 0; i < guessButtons.length; i++){
             //add graphics - 4 circle lines...new class or method : paintComponent
-            guessButtons[i] = new JButton("O");
-            guessButtons[i].setBackground(Color.WHITE);
+            guessButtons[i] = new JButton("  ");
+            guessButtons[i].setBackground(Color.LIGHT_GRAY);
+            guessButtons[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
+                        ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
+                        guessEventCount--; //make sure this works
+                        //also make sure can't delete once guess button pressed
+                    }
+                }
+            });
             guessPanel.add(guessButtons[i]);
-
             //add listeners if pressed button resets colour
         }
 
@@ -152,7 +167,18 @@ public class GameBoardGUI extends JFrame /*, KeyListener*/ {
         makeGuess.setBackground(Color.GRAY);
         makeGuess.setForeground(Color.WHITE);
         makeGuess.setBorder(BorderFactory.createMatteBorder(8,8,8,8,Color.WHITE));
-        //add listeners
+        makeGuess.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(guessEventCount == 4){      //guess event must be correct
+                    JOptionPane.showMessageDialog(null, "Guess made");
+                    //increment guess counter etc
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "You have not completed your guess",
+                                                "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         playPanel.add(makeGuess);
 
