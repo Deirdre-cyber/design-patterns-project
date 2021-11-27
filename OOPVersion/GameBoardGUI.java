@@ -17,7 +17,7 @@ public class GameBoardGUI extends JFrame {
     private ArrayList<Color> buttonColourList;  //HIDDEN BUTTON
     private JButton makeGuess, blankColour; //preferably add to colourButtons - make arrayLIst
     private int guessEventCount = 0; //make static?
-    private Font gameFont = new Font("Monospaced", Font.PLAIN, 22);
+    private final Font GAME_FONT = new Font("Monospaced", Font.PLAIN, 22);
 
     public GameBoardGUI(){
         super("Welcome Player");
@@ -157,7 +157,7 @@ public class GameBoardGUI extends JFrame {
     }
 
     public Font getGameFont() {
-        return gameFont;
+        return GAME_FONT;
     }
 
     private JPanel createGameBoard(){
@@ -169,7 +169,7 @@ public class GameBoardGUI extends JFrame {
         panelLeft.setBackground(Color.GRAY);
 
         solutionLabelLeft = new JLabel("MASTER");//change to solution graphic if game won : if-else
-        solutionLabelLeft.setFont(gameFont);
+        solutionLabelLeft.setFont(GAME_FONT);
         solutionLabelLeft.setForeground(Color.WHITE);
         solutionLabelLeft.setHorizontalAlignment(SwingConstants.RIGHT);
 
@@ -186,7 +186,7 @@ public class GameBoardGUI extends JFrame {
         }
 
         gameCounterLabel = new JLabel("Game No.1"); //set by numGames : after game play "You win/you lose"
-        gameCounterLabel.setFont(gameFont);
+        gameCounterLabel.setFont(GAME_FONT);
         gameCounterLabel.setForeground(Color.WHITE);
         gameCounterLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -197,7 +197,7 @@ public class GameBoardGUI extends JFrame {
         panelRight.setBackground(Color.GRAY);
 
         solutionLabelRight = new JLabel("MIND");        //use GridBagLayout?
-        solutionLabelRight.setFont(gameFont);
+        solutionLabelRight.setFont(GAME_FONT);
         solutionLabelRight.setForeground(Color.WHITE);
         solutionLabelRight.setHorizontalAlignment(SwingConstants.LEFT);
         panelRight.add(solutionLabelRight);
@@ -213,7 +213,7 @@ public class GameBoardGUI extends JFrame {
         }
 
         hintsLabel = new JLabel("hints"); //set by numGames
-        hintsLabel.setFont(gameFont);
+        hintsLabel.setFont(GAME_FONT);
         hintsLabel.setForeground(Color.WHITE);
         hintsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         panelRight.add(hintsLabel);
@@ -303,7 +303,7 @@ public class GameBoardGUI extends JFrame {
 
         makeGuess = new JButton("Make Guess");
         makeGuess.setBackground(Color.WHITE);
-        makeGuess.setFont(gameFont);
+        makeGuess.setFont(GAME_FONT);
         makeGuess.setBackground(Color.GRAY);
         makeGuess.setForeground(Color.WHITE);
         makeGuess.setBorder(BorderFactory.createMatteBorder(8,8,8,8,Color.WHITE));

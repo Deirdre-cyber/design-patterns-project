@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Respresents a Player invoved in a Game.
+ * Respresents a Player involved in a Game.
  * A player can play multiple games*/
 
 public class Player{
 
-    //Mental Block converting from procedural console to OOP GUI - starting over.......
 
     private String name;
     private static int wins = 0;
