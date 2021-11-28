@@ -6,8 +6,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class GameBoardGUI extends JFrame {
+public class GameBoardGUI extends Game {
 
+    JFrame game = new JFrame("Mastermind");
     private JButton[] guessButtons;
     private JButton[] colourButtons;
     private JButton[] solutionButtons;      //needed for first run
@@ -21,7 +22,7 @@ public class GameBoardGUI extends JFrame {
     private final Font GAME_FONT = new Font("Monospaced", Font.PLAIN, 22);
 
     public GameBoardGUI(){
-        super("Welcome Player");
+        super();
 
         //create menu panel - quit and save
 
@@ -32,13 +33,13 @@ public class GameBoardGUI extends JFrame {
         mainBoard.add(createGameBoard());
         mainBoard.add(createPlayBoard());
 
-        add(mainBoard);
+        game.add(mainBoard);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocation(550, 50);
-        setSize(500,600);
-        setResizable(false);
-        setVisible(true);
+        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        game.setLocation(550, 50);
+        game.setSize(500,600);
+        game.setResizable(false);
+        game.setVisible(true);
     }
 
     //GETTERS AND SETTERS - DELETE ALL UNNECESSARY!!!
@@ -496,6 +497,7 @@ public class GameBoardGUI extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 //once all validation is done
+
                 GameBoardGUI newgame = new GameBoardGUI();
             }
         });
@@ -513,22 +515,24 @@ public class GameBoardGUI extends JFrame {
         JTextField playerOneName = new JTextField();//must be complete to continue if multi play
         playerOneLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         playerOneLabel.setForeground(Color.WHITE);
-        playerOneName.setBackground(Color.GRAY);
+        playerOneName.setBackground(Color.LIGHT_GRAY);
         playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        playerOneName.setEditable(false); //set editable if multiplayer
 
 
         JLabel playerTwoLabel = new JLabel("Enter Player Two:");
-        JTextField playerTwoName = new JTextField();//must be complete to continue
+        JTextField playerTwoName = new JTextField("Computer");//must be complete to continue
         playerTwoLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         playerTwoLabel.setForeground(Color.WHITE);
-        playerOneName.setBackground(Color.GRAY);
-        playerOneName.setEditable(false); //set editable if multiplayer
+        playerTwoName.setBackground(Color.LIGHT_GRAY);
+        playerTwoName.setEditable(false); //set editable if multiplayer
 
         JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
         JTextField guessAmount = new JTextField();//must be complete to continue
         guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        guessAmount.setBackground(Color.LIGHT_GRAY);
         guessAmountLabel.setForeground(Color.WHITE);
         //validation code for textfield....
 
@@ -536,6 +540,7 @@ public class GameBoardGUI extends JFrame {
         JTextField gameAmount = new JTextField();//must be complete to continue
         gameAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        gameAmount.setBackground(Color.LIGHT_GRAY);
         gameAmountLabel.setForeground(Color.WHITE);
         //validation code for textfield....
 
@@ -557,7 +562,7 @@ public class GameBoardGUI extends JFrame {
         choiceFrame.add(optionsPanel);
 
         choiceFrame.setLocation(550, 50);
-        choiceFrame.setSize(600,400);
+        choiceFrame.setSize(500,400);
         choiceFrame.setResizable(false);
         choiceFrame.setVisible(true);
 

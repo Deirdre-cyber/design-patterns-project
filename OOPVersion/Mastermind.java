@@ -3,8 +3,8 @@ package OOPVersion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
-public class Mastermind extends JFrame {
+//put all choice code here?
+public class Mastermind extends GameBoardGUI{
 
     public static void main(String[] args) {
 
@@ -42,10 +42,12 @@ public class Mastermind extends JFrame {
         });
 
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        game.setLocation(550, 50);
+        game.setLocation(600, 50);
         game.setSize(400,400);
         game.setResizable(false);
         game.setVisible(true);
     }
+
+
 
 }

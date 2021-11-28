@@ -1,41 +1,67 @@
 package OOPVersion;
 
+import java.util.Arrays;
 
 public class Game /*extends GameBoardGUI*/{
 
+    private Player[] player;
+    private int numberGames;
+    private int numberGuesses;
     private String version;
-    private Player playerOne;
-    private Player playerTwo;
 
-    public Game(String version, Player playerOne, Player playerTwo) {
+    public Game() {
+        this(new Player[]{}, 0, 0, "Game Version not set");
+    }
+
+    public Game(Player[] player, int numberGames, int numberGuesses, String version) {
+        setPlayer(player);
+        setNumberGames(numberGames);
+        setNumberGuesses(numberGuesses);
         setVersion(version);
-        setPlayerOne(playerOne);
-        setPlayerTwo(playerTwo);
+    }
+
+    public Player[] getPlayer() {
+        return Arrays.copyOf(player, player.length);
+    }
+    public void setPlayer(Player[] player) {
+        //if multi or single
+        if(player != null) {
+            this.player = Arrays.copyOf(player, player.length);
+
+        }
+    }
+
+    public int getNumberGames() {
+        return numberGames;
+    }
+    public void setNumberGames(int numberGames) {
+        this.numberGames = numberGames;
+    }
+
+    public int getNumberGuesses() {
+        return numberGuesses;
+    }
+    public void setNumberGuesses(int numberGuesses) {
+        this.numberGuesses = numberGuesses;
     }
 
     public String getVersion() {
         return version;
     }
     public void setVersion(String version) {
+        //example, not real code
         if(version.equals("kids"))
-            this.version = "kids";//play kids....
+            this.version = "kids";
+        else if(version.equals("Classic"))
+            this.version = "Classic";
         else
-            this.version = version;
+            this.version = "Expert";
     }
 
-    public Player getPlayerOne() {
-        return playerOne;
-    }
-    public void setPlayerOne(Player playerOne) {
-        this.playerOne = playerOne;
-    }
+    @Override
+    public String toString() {
 
-    public Player getPlayerTwo() {
-        return playerTwo;
+        return "Player one: " + Arrays.toString(getPlayer()) + "\nPLayer Two: " + Arrays.toString(getPlayer())
+                + "\nGames Played: " + getNumberGames() + "\nGuesses Made: " + getNumberGuesses();
     }
-    public void setPlayerTwo(Player playerTwo) {
-        this.playerTwo = playerTwo;
-    }
-
-
 }
