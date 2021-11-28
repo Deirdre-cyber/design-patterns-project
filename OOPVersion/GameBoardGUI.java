@@ -10,6 +10,7 @@ public class GameBoardGUI extends JFrame {
 
     private JButton[] guessButtons;
     private JButton[] colourButtons;
+    private JButton[] solutionButtons;      //needed for first run
     private JPanel[] guessPanels;
     private JPanel[] hintPanels;
     private JPanel mainBoard, gameBoard, guessPanel, colourButtonPanel, playPanel;
@@ -22,9 +23,12 @@ public class GameBoardGUI extends JFrame {
     public GameBoardGUI(){
         super("Welcome Player");
 
+        //create menu panel - quit and save
+
         mainBoard = new JPanel();
         mainBoard.setLayout(new GridLayout(1,2));   //make better with gridbaglayout
 
+        //mainBoard.add(createMenuBar()); Make it a bar, either second panel or different layout manager.....
         mainBoard.add(createGameBoard());
         mainBoard.add(createPlayBoard());
 
@@ -36,6 +40,7 @@ public class GameBoardGUI extends JFrame {
         setResizable(false);
         setVisible(true);
     }
+
     //GETTERS AND SETTERS - DELETE ALL UNNECESSARY!!!
     public JButton[] getGuessButtons() {
         return guessButtons;
@@ -160,6 +165,27 @@ public class GameBoardGUI extends JFrame {
         return GAME_FONT;
     }
 
+    //--------MENU BAR--------------
+    /*private JPanel createMenuBar(){
+
+        JPanel menuPanel = new JPanel(new FlowLayout());
+        JMenuBar mainMenuBar = new JMenuBar();
+
+        JMenu gameMenu = new JMenu("Game");
+        JMenuItem saveItem = new JMenuItem("SAVE");
+        JMenuItem quitItem = new JMenuItem("QUIT");
+
+        gameMenu.add(saveItem);
+        gameMenu.add(quitItem);
+
+        mainMenuBar.add(gameMenu);
+
+        menuPanel.add(mainMenuBar);
+
+        return menuPanel;
+    }*/
+
+
     private JPanel createGameBoard(){
 
         gameBoard = new JPanel(new GridLayout(1, 2));
@@ -168,12 +194,38 @@ public class GameBoardGUI extends JFrame {
         JPanel panelLeft = new JPanel(new GridLayout(12, 1));
         panelLeft.setBackground(Color.GRAY);
 
-        solutionLabelLeft = new JLabel("MASTER");//change to solution graphic if game won : if-else
+        //----------TO BE SHOWN WHILE PLAYER ONE SELECTING (MULTIPLAYER)-----------
+        /*JPanel solutionPanel = new JPanel();
+
+        solutionButtons = new JButton[4]; //set by createCode() in Player
+
+        for(int j = 0; j < solutionButtons.length; j++) {
+            //add graphics - 4 circle lines...new class or method : paintComponent
+            solutionButtons[j] = new JButton("  ");
+            solutionButtons[j].setBackground(Color.LIGHT_GRAY);
+            solutionButtons[j].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (((JButton) (e.getSource())).getBackground() != Color.LIGHT_GRAY) {
+                        ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
+                        guessEventCount--; //make sure this works
+                        //also make sure can't delete once guess button pressed
+                    }
+                }
+            });
+            solutionPanel.add(solutionButtons[j]);
+        }
+        panelLeft.add(solutionPanel);*/
+
+        //TO BE SHOWN DURING GAME PLAY
+        solutionLabelLeft = new JLabel("MASTER");//if two players, player enters solution first.Then remove solution and add JLabel
         solutionLabelLeft.setFont(GAME_FONT);
         solutionLabelLeft.setForeground(Color.WHITE);
         solutionLabelLeft.setHorizontalAlignment(SwingConstants.RIGHT);
 
         panelLeft.add(solutionLabelLeft);
+
+        //----------------each panel must have 4 blank buttons/labels than can be changes----------------
 
         guessPanels = new JPanel[10]; //Number is numGuesses chosen
 
@@ -256,6 +308,7 @@ public class GameBoardGUI extends JFrame {
                 public void mousePressed(MouseEvent e) {
 
                     if(guessEventCount < guessButtons.length)
+                        //else if condition for when solution being made
                         guessButtons[guessEventCount].setBackground(((JButton)e.getSource()).getBackground());
                     else {
                         System.out.print(guessEventCount);
@@ -355,7 +408,7 @@ public class GameBoardGUI extends JFrame {
         startButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                GameBoardGUI newGame = new GameBoardGUI();
+                GameBoardGUI.chooseGameOptions();
             }
         });
 
@@ -396,5 +449,136 @@ public class GameBoardGUI extends JFrame {
         });
 
         return viewLeaderBoardButton;
+    }
+
+    public static JButton createGameOptionsButton(){
+
+        JButton gameOptionsButton = new JButton("[G]AME OPTIONS...");
+        gameOptionsButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui??
+        gameOptionsButton.setBackground(Color.MAGENTA);
+        gameOptionsButton.setForeground(Color.BLACK);
+        gameOptionsButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+
+        gameOptionsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                chooseGameOptions();
+                //create player objects
+                //set difficulty version
+            }
+        });
+
+        return gameOptionsButton;
+    }
+    public static void chooseGameOptions(){
+
+        //player + game difficulty
+        JFrame choiceFrame = new JFrame();
+        JPanel optionsPanel = new JPanel(new GridLayout(1,2));
+
+        Font buttonFont = new Font("Monospaced", Font.PLAIN, 18);
+
+        JPanel choicePanelLeft = new JPanel(new GridLayout(6, 1));
+
+        JRadioButton singlePlayerButton = new JRadioButton("SINGLE PLAYER");
+        singlePlayerButton.setFont(buttonFont);
+        singlePlayerButton.setBackground(Color.DARK_GRAY);
+        singlePlayerButton.setForeground(Color.WHITE);
+        singlePlayerButton.setSelected(true);
+
+        JRadioButton multiPayerButton = new JRadioButton("MULTIPLAYER");
+        multiPayerButton.setFont(buttonFont);
+        multiPayerButton.setBackground(Color.DARK_GRAY);
+        multiPayerButton.setForeground(Color.WHITE);
+
+        JRadioButton kidsVersion = new JRadioButton("EASY");
+        kidsVersion.setFont(buttonFont);
+        kidsVersion.setBackground(Color.DARK_GRAY);
+        kidsVersion.setForeground(Color.WHITE);
+        kidsVersion.setSelected(true);
+
+        JRadioButton classicVersion = new JRadioButton("CLASSIC");
+        classicVersion.setFont(buttonFont);
+        classicVersion.setBackground(Color.DARK_GRAY);
+        classicVersion.setForeground(Color.WHITE);
+
+        JRadioButton expertVersion = new JRadioButton("EXPERT");
+        expertVersion.setFont(buttonFont);
+        expertVersion.setBackground(Color.DARK_GRAY);
+        expertVersion.setForeground(Color.WHITE);
+
+        JButton confirmButton = new JButton("START GAME");
+        confirmButton.setFont(buttonFont);
+        confirmButton.setBackground(Color.WHITE);
+        confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
+        confirmButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                //once all valiation is done
+                GameBoardGUI newgame = new GameBoardGUI();
+            }
+        });
+
+        choicePanelLeft.add(singlePlayerButton);
+        choicePanelLeft.add(multiPayerButton);
+        choicePanelLeft.add(kidsVersion);
+        choicePanelLeft.add(classicVersion);
+        choicePanelLeft.add(expertVersion);
+        choicePanelLeft.add(confirmButton);
+
+        JPanel choicePanelRight = new JPanel(new GridLayout(12,1));
+
+        JLabel playerOneLabel = new JLabel("Enter Player One:");
+        JTextField playerOneName = new JTextField();//must be complete to continue if multi play
+        playerOneLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        playerOneLabel.setForeground(Color.WHITE);
+        playerOneName.setBackground(Color.GRAY);
+        playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+
+
+        JLabel playerTwoLabel = new JLabel("Enter Player Two:");
+        JTextField playerTwoName = new JTextField();//must be complete to continue
+        playerTwoLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        playerTwoLabel.setForeground(Color.WHITE);
+        playerOneName.setBackground(Color.GRAY);
+        playerOneName.setEditable(false); //set editable if multiplayer
+
+        JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
+        JTextField guessAmount = new JTextField();//must be complete to continue
+        guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        guessAmountLabel.setForeground(Color.WHITE);
+        //validation code for textfield....
+
+        JLabel gameAmountLabel = new JLabel("Enter amount of Games (max 10):");
+        JTextField gameAmount = new JTextField();//must be complete to continue
+        gameAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        gameAmountLabel.setForeground(Color.WHITE);
+        //validation code for textfield....
+
+        choicePanelRight.add(playerOneLabel);
+        choicePanelRight.add(playerOneName);
+        choicePanelRight.add(playerTwoLabel);
+        choicePanelRight.add(playerTwoName);
+        choicePanelRight.add(gameAmountLabel);
+        choicePanelRight.add(gameAmount);
+        choicePanelRight.add(guessAmountLabel);
+        choicePanelRight.add(guessAmount);
+
+        choicePanelLeft.setBackground(Color.LIGHT_GRAY);
+        choicePanelRight.setBackground(Color.DARK_GRAY);
+
+        optionsPanel.add(choicePanelLeft);
+        optionsPanel.add(choicePanelRight);
+
+        choiceFrame.add(optionsPanel);
+
+        choiceFrame.setLocation(550, 50);
+        choiceFrame.setSize(600,400);
+        choiceFrame.setResizable(false);
+        choiceFrame.setVisible(true);
+
     }
 }

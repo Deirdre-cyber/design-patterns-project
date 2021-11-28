@@ -1,13 +1,13 @@
 package OOPVersion;
 
 
-public class VersionKids /*implements Game*/{
+public class Game /*implements Game*/{
 
     private String version;
     private Player playerOne;
     private Player playerTwo;
 
-    public VersionKids(String version, Player playerOne, Player playerTwo) {
+    public Game(String version, Player playerOne, Player playerTwo) {
         setVersion(version);
         setPlayerOne(playerOne);
         setPlayerTwo(playerTwo);

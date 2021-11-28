@@ -11,14 +11,13 @@ import java.util.Arrays;
 public class Player{
 
 
-    private String name;
+   /* private String name;
     private static int wins = 0;
     private char[] code;
     private boolean playerTurn = false;
 
-    public Player(String name, int wins, char[] code, boolean playerTurn) {
+    public Player(String name, char[] code, boolean playerTurn) {
         setName(name);
-        setWins(wins);
         setCode(code);
         setPlayerTurn(playerTurn);
     }
@@ -119,7 +118,7 @@ public class Player{
             }
         }
         return s;
-    }*/
+    }
 
     public boolean validateColour(char c){
         //check colour chosen is in colour list
@@ -134,6 +133,6 @@ public class Player{
                 return true;
         }
         return false;
-    }
+    }*/
 
 }
