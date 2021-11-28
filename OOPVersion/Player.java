@@ -11,14 +11,7 @@ public class Player /*extends Game*/{
     private static int numberWins; //number of wins per game
 
     public Player() {
-        this("Computer");
-    }
-
-    public int getNumberWins() {
-        return numberWins;
-    }
-    public void setNumberWins(int numberWins) {
-        Player.numberWins = numberWins;
+        this("Computer", 0);
     }
 
     public Player(String player) {
@@ -32,117 +25,64 @@ public class Player /*extends Game*/{
         this.player = player;
     }
 
-    /* private String name;
-    private static int wins = 0;
-    private char[] code;
-    private boolean playerTurn = false;
-
-    public Player(String name, char[] code, boolean playerTurn) {
-        setName(name);
-        setCode(code);
-        setPlayerTurn(playerTurn);
+    public int getNumberWins() {
+        return numberWins;
+    }
+    public void setNumberWins(int numberWins) {
+        Player.numberWins = numberWins;
     }
 
-    public boolean isPlayerTurn() {
-        return playerTurn;
-    }
-    public void setPlayerTurn(boolean playerTurn) {
-        this.playerTurn = playerTurn;
-    }
-
-    public char[] getCode() {
-
-        char[] allColours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
-        char colour;
-        char[] s = new char[4];
-
-        if(!getName().equals("Computer")){
-            JOptionPane.showMessageDialog(null, "Your turn " + getName());
-            playerTurn = true;
-
-            for(int i = 0; i < 4; i++){
-
-                colour = JOptionPane.showInputDialog("Please enter colour " + (i + 1) + " ").charAt(0);
-
-                while(!validateColour(colour) || !Character.isLetter(colour)){
-                    colour = JOptionPane.showInputDialog("INVALID!!! Please enter colour " + (i + 1) + " ").charAt(0);
-                }
-                s[i] = colour;
-                code = s;
-            }
-        }
-        else{
-            for(int i = 0; i < 4; i++){
-
-                int num = (int) (Math.random() * 4);
-                s[i] = allColours[num];
-                code = s;
-            }
-        }
-        return code;
-    }
-
-    public void setCode(char[] code) {
-        if(code != null)
-            this.code = Arrays.copyOf(code, code.length);
-    }
-
-    public int getWins() {
-        return wins;
-    }
-
-    public static void setWins(int wins) {
-        if(wins > 0)
-            Player.wins++;
-        else
-            Player.wins = wins;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    public Player(String player, int numberWins) {
+        setPlayer(player);
+        setNumberWins(numberWins);
     }
 
     @Override
     public String toString() {
-        return "Player name: " + getName();
+        return "Player: " + getPlayer() + "\nTotal Wins: " + getNumberWins();
     }
 
-//methods for Player Objects
+    //methods for Player Objects
 
-    /*public char[] createCode(String player){
-        char[] allColours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
-        char colour;
+    /*
+
+    createCodeComputer....
+    public static char[] createCodeComputerKids(String play) {
+
+        int num;
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
         char[] s = new char[4];
 
-        if(!getName().equals("Computer")){
-            JOptionPane.showMessageDialog(null, "Your turn " + player);
+        System.out.println("Your turn " + play);
 
-            for(int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
+            num = (int)(Math.random()*7);
 
-                colour = JOptionPane.showInputDialog("Please enter colour " + (i + 1) + " ").charAt(0);
-
-                while(!validateColour(colour) || !Character.isLetter(colour)){
-                    colour = JOptionPane.showInputDialog("INVALID!!! Please enter colour " + (i + 1) + " ").charAt(0);
-                }
-                s[i] = colour;
-            }
-        }
-        else{
-            for(int i = 0; i < 4; i++){
-
-                int num = (int) (Math.random() * 4);
-                //where to put the colours?
-                s[i] = allColours[num];
-            }
+            s[i] = colours[num];
         }
         return s;
     }
 
+    public static char[] createCodeComputerExpert(String play) {
+
+        int num;
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v', 'K'};
+        char[] s = new char[4];
+
+        System.out.println("Your turn " + play);
+
+        for (int i = 0; i < 4; i++) {
+            num = (int)(Math.random()*8);
+            s[i] = colours[num];
+        }
+        return s;
+    }
+
+
     public boolean validateColour(char c){
+
         //check colour chosen is in colour list
+
         ArrayList<Character> coloursList = new ArrayList<>();
         char[] allColours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
 

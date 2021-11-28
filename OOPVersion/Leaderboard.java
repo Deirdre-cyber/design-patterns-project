@@ -1,5 +1,6 @@
 package OOPVersion;
 
 public class Leaderboard {
-    //complete
+
+    private Player[] leaders;
 }
