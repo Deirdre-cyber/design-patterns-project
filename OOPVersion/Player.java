@@ -1,9 +1,5 @@
 package OOPVersion;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 /**
  * Respresents a Player involved in a Game.
  * A player can play multiple games*/

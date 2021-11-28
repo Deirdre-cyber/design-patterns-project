@@ -1,7 +1,7 @@
 package OOPVersion;
 
 
-public class Game /*implements Game*/{
+public class Game /*extends GameBoardGUI*/{
 
     private String version;
     private Player playerOne;

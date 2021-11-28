@@ -10,12 +10,11 @@ public class Mastermind extends JFrame {
 
         JFrame game = new JFrame("MASTERMIND");
 
-        JPanel startGamePanel = new JPanel(new GridLayout(5, 1));
+        JPanel startGamePanel = new JPanel(new GridLayout(4, 1));
         game.add(startGamePanel);
 
         startGamePanel.add(GameBoardGUI.createStartButton());
         startGamePanel.add(GameBoardGUI.createLoadButton());
-        startGamePanel.add(GameBoardGUI.createGameOptionsButton());
         startGamePanel.add(GameBoardGUI.createViewLeaderboardButton());
         startGamePanel.add(GameBoardGUI.createQuitButton());
 
@@ -29,14 +28,11 @@ public class Mastermind extends JFrame {
                     GameBoardGUI.chooseGameOptions();
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_L){
-                    GameBoardGUI newGame = new GameBoardGUI();
+                    JOptionPane.showMessageDialog(null, "Load Saved game");
                     //load saved game
                 }
-                else if(e.getKeyCode() == KeyEvent.VK_O){
-                    GameBoardGUI.chooseGameOptions();
-                }
                 else if(e.getKeyCode() == KeyEvent.VK_V){
-                    System.out.print("Load Leaderboard");
+                    JOptionPane.showMessageDialog(null, "Load Leaderboard");
                     //load
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_Q){

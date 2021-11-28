@@ -425,7 +425,7 @@ public class GameBoardGUI extends JFrame {
         loadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                GameBoardGUI newGame = new GameBoardGUI();
+                JOptionPane.showMessageDialog(null, "Load Saved game");
                 //open saved game files
             }
         });
@@ -436,14 +436,14 @@ public class GameBoardGUI extends JFrame {
 
         JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
         viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui
-        viewLeaderBoardButton.setBackground(Color.CYAN);
+        viewLeaderBoardButton.setBackground(Color.MAGENTA);
         viewLeaderBoardButton.setForeground(Color.BLACK);
         viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
 
         viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.print("View Leaderboard");
+                JOptionPane.showMessageDialog(null, "Load Leaderboard");
                 //open saves files
             }
         });
@@ -451,25 +451,6 @@ public class GameBoardGUI extends JFrame {
         return viewLeaderBoardButton;
     }
 
-    public static JButton createGameOptionsButton(){
-
-        JButton gameOptionsButton = new JButton("[G]AME OPTIONS...");
-        gameOptionsButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui??
-        gameOptionsButton.setBackground(Color.MAGENTA);
-        gameOptionsButton.setForeground(Color.BLACK);
-        gameOptionsButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        gameOptionsButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                chooseGameOptions();
-                //create player objects
-                //set difficulty version
-            }
-        });
-
-        return gameOptionsButton;
-    }
     public static void chooseGameOptions(){
 
         //player + game difficulty
@@ -514,7 +495,7 @@ public class GameBoardGUI extends JFrame {
         confirmButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                //once all valiation is done
+                //once all validation is done
                 GameBoardGUI newgame = new GameBoardGUI();
             }
         });
