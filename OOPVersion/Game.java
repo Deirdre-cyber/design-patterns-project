@@ -2,7 +2,7 @@ package OOPVersion;
 
 import java.util.Arrays;
 
-public class Game /*extends GameBoardGUI*/{
+public class Game{
 
     private Player[] player;
     private int numberGames;
@@ -24,7 +24,6 @@ public class Game /*extends GameBoardGUI*/{
         return Arrays.copyOf(player, player.length);
     }
     public void setPlayer(Player[] player) {
-        //if multi or single
         if(player != null) {
             this.player = Arrays.copyOf(player, player.length);
 
@@ -49,19 +48,13 @@ public class Game /*extends GameBoardGUI*/{
         return version;
     }
     public void setVersion(String version) {
-        //example, not real code
-        if(version.equals("kids"))
-            this.version = "kids";
-        else if(version.equals("Classic"))
-            this.version = "Classic";
-        else
-            this.version = "Expert";
+        this.version = version;
     }
 
     @Override
     public String toString() {
 
-        return "Player one: " + Arrays.toString(getPlayer()) + "\nPLayer Two: " + Arrays.toString(getPlayer())
+        return "Players: " + Arrays.toString(getPlayer())
                 + "\nGames Played: " + getNumberGames() + "\nGuesses Made: " + getNumberGuesses();
     }
 }

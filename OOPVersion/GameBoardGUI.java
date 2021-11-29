@@ -6,30 +6,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class GameBoardGUI extends Game {
+public class GameBoardGUI extends Mastermind{
 
+    //CREATE GAME BOARD GUI - REMADE EACH GAME
     JFrame game = new JFrame("Mastermind");
+
     private JButton[] guessButtons;
-    private JButton[] colourButtons;
-    private JButton[] solutionButtons;      //needed for first run
     private JPanel[] guessPanels;
-    private JPanel[] hintPanels;
-    private JPanel mainBoard, gameBoard, guessPanel, colourButtonPanel, playPanel;
-    private JLabel solutionLabelLeft, solutionLabelRight, gameCounterLabel, hintsLabel;
-    private ArrayList<Color> buttonColourList;  //HIDDEN BUTTON
-    private JButton makeGuess, blankColour; //preferably add to colourButtons - make arrayLIst
-    private int guessEventCount = 0; //make static?
+    private int guessEventCount = 0;
     private final Font GAME_FONT = new Font("Monospaced", Font.PLAIN, 22);
 
-    public GameBoardGUI(){
-        super();
+    public GameBoardGUI(Game newGame){
 
-        //create menu panel - quit and save
+        JPanel mainBoard = new JPanel();
+        mainBoard.setLayout(new GridLayout(1,2));
 
-        mainBoard = new JPanel();
-        mainBoard.setLayout(new GridLayout(1,2));   //make better with gridbaglayout
-
-        //mainBoard.add(createMenuBar()); Make it a bar, either second panel or different layout manager.....
         mainBoard.add(createGameBoard());
         mainBoard.add(createPlayBoard());
 
@@ -42,168 +33,40 @@ public class GameBoardGUI extends Game {
         game.setVisible(true);
     }
 
-    //GETTERS AND SETTERS - DELETE ALL UNNECESSARY!!!
-    public JButton[] getGuessButtons() {
-        return guessButtons;
-    }
-    public void setGuessButtons(JButton[] guessButtons) {
-        this.guessButtons = guessButtons;
-    }
-
-    public JButton[] getColourButtons() {
-        return colourButtons;
-    }
-    public void setColourButtons(JButton[] colourButtons) {
-        this.colourButtons = colourButtons;
-    }
-
-    public JPanel[] getGuessPanels() {
-        return guessPanels;
-    }
-    public void setGuessPanels(JPanel[] guessPanels) {
-        this.guessPanels = guessPanels;
-    }
-
-    public JPanel[] getHintPanels() {
-        return hintPanels;
-    }
-    public void setHintPanels(JPanel[] hintPanels) {
-        this.hintPanels = hintPanels;
-    }
-
-    public JPanel getMainBoard() {
-        return mainBoard;
-    }
-    public void setMainBoard(JPanel mainBoard) {
-        this.mainBoard = mainBoard;
-    }
-
-    public JPanel getGameBoard() {
-        return gameBoard;
-    }
-    public void setGameBoard(JPanel gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
-    public JPanel getGuessPanel() {
-        return guessPanel;
-    }
-    public void setGuessPanel(JPanel guessPanel) {
-        this.guessPanel = guessPanel;
-    }
-
-    public JPanel getColourButtonPanel() {
-        return colourButtonPanel;
-    }
-    public void setColourButtonPanel(JPanel colourButtonPanel) {
-        this.colourButtonPanel = colourButtonPanel;
-    }
-
-    public JPanel getPlayPanel() {
-        return playPanel;
-    }
-    public void setPlayPanel(JPanel playPanel) {
-        this.playPanel = playPanel;
-    }
-
-    public JLabel getSolutionLabelLeft() {
-        return solutionLabelLeft;
-    }
-    public void setSolutionLabelLeft(JLabel solutionLabelLeft) {
-        this.solutionLabelLeft = solutionLabelLeft;
-    }
-
-    public JLabel getSolutionLabelRight() {
-        return solutionLabelRight;
-    }
-    public void setSolutionLabelRight(JLabel solutionLabelRight) {
-        this.solutionLabelRight = solutionLabelRight;
-    }
-
-    public JLabel getGameCounterLabel() {
-        return gameCounterLabel;
-    }
-    public void setGameCounterLabel(JLabel gameCounterLabel) {
-        this.gameCounterLabel = gameCounterLabel;
-    }
-
-    public JLabel getHintsLabel() {
-        return hintsLabel;
-    }
-    public void setHintsLabel(JLabel hintsLabel) {
-        this.hintsLabel = hintsLabel;
-    }
-
-    public ArrayList<Color> getButtonColourList() {
-        return buttonColourList;
-    }
-    public void setButtonColourList(ArrayList<Color> buttonColourList) {
-        this.buttonColourList = buttonColourList;
-    }
-
-    public JButton getMakeGuess() {
-        return makeGuess;
-    }
-    public void setMakeGuess(JButton makeGuess) {
-        this.makeGuess = makeGuess;
-    }
-
-    public JButton getBlankColour() {
-        return blankColour;
-    }
-    public void setBlankColour(JButton blankColour) {
-        this.blankColour = blankColour;
-    }
-
-    public int getGuessEventCount() {
-        return guessEventCount;
-    }
-    public void setGuessEventCount(int guessEventCount) {
-        this.guessEventCount = guessEventCount;
-    }
-
-    public Font getGameFont() {
-        return GAME_FONT;
-    }
-
-    //--------MENU BAR--------------
-    /*private JPanel createMenuBar(){
-
-        JPanel menuPanel = new JPanel(new FlowLayout());
-        JMenuBar mainMenuBar = new JMenuBar();
-
-        JMenu gameMenu = new JMenu("Game");
-        JMenuItem saveItem = new JMenuItem("SAVE");
-        JMenuItem quitItem = new JMenuItem("QUIT");
-
-        gameMenu.add(saveItem);
-        gameMenu.add(quitItem);
-
-        mainMenuBar.add(gameMenu);
-
-        menuPanel.add(mainMenuBar);
-
-        return menuPanel;
-    }*/
-
+    //GETTERS AND SETTERS...
 
     private JPanel createGameBoard(){
 
-        gameBoard = new JPanel(new GridLayout(1, 2));
+        JPanel gameBoard = new JPanel(new GridLayout(1, 2));
 
         //RIGHT PANEL
         JPanel panelLeft = new JPanel(new GridLayout(12, 1));
         panelLeft.setBackground(Color.GRAY);
 
         //----------TO BE SHOWN WHILE PLAYER ONE SELECTING (MULTIPLAYER)-----------
+
         /*JPanel solutionPanel = new JPanel();
 
-        solutionButtons = new JButton[4]; //set by createCode() in Player
+        //BETTER WAY TO CHECK PLAYERS......
+        String players="";
+
+        for(int i = 0; i < getPlayer().length; i++){
+            players += getPlayer()[i] + "";
+            System.out.print(players);
+        }
+        char[] computerSolution;
+
+        if(players.contains("Computer")){
+            computerSolution = createCodeComputer();
+        }
+
+        JButton[] solutionButtons = new JButton[4];     //set by createCode() in Player
 
         for(int j = 0; j < solutionButtons.length; j++) {
-            //add graphics - 4 circle lines...new class or method : paintComponent
+
             solutionButtons[j] = new JButton("  ");
             solutionButtons[j].setBackground(Color.LIGHT_GRAY);
+
             solutionButtons[j].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -219,56 +82,57 @@ public class GameBoardGUI extends Game {
         panelLeft.add(solutionPanel);*/
 
         //TO BE SHOWN DURING GAME PLAY
-        solutionLabelLeft = new JLabel("MASTER");//if two players, player enters solution first.Then remove solution and add JLabel
+        JLabel solutionLabelLeft = new JLabel("MASTER");
         solutionLabelLeft.setFont(GAME_FONT);
         solutionLabelLeft.setForeground(Color.WHITE);
         solutionLabelLeft.setHorizontalAlignment(SwingConstants.RIGHT);
 
         panelLeft.add(solutionLabelLeft);
 
-        //----------------each panel must have 4 blank buttons/labels than can be changes----------------
+        JPanel[] guessPanels = new JPanel[10]; //Number is numGuesses chosen
 
-        guessPanels = new JPanel[10]; //Number is numGuesses chosen
-
+        //MAKE ARRAY OF BUTTONS IN EACH PANEL
         for(int i = 0; i < guessPanels.length; i++){
             guessPanels[i] = new JPanel(new FlowLayout());
             guessPanels[i].setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
             guessPanels[i].setBackground(Color.WHITE);
             panelLeft.add(guessPanels[i]);
-            //add graphics - 4 circle lines - to each panel...new class or method : paintComponent
         }
 
-        gameCounterLabel = new JLabel("Game No.1"); //set by numGames : after game play "You win/you lose"
+        JLabel gameCounterLabel = new JLabel("Game No" + getNumberGames()); //after game play "You win/you lose"
         gameCounterLabel.setFont(GAME_FONT);
         gameCounterLabel.setForeground(Color.WHITE);
         gameCounterLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         panelLeft.add(gameCounterLabel);
 
-        //RIGHT PANEL
+        //RIGHT PANEL : HINTS PANEL
         JPanel panelRight = new JPanel(new GridLayout(12, 1));
         panelRight.setBackground(Color.GRAY);
 
-        solutionLabelRight = new JLabel("MIND");        //use GridBagLayout?
+        JLabel solutionLabelRight = new JLabel("MIND");
         solutionLabelRight.setFont(GAME_FONT);
         solutionLabelRight.setForeground(Color.WHITE);
         solutionLabelRight.setHorizontalAlignment(SwingConstants.LEFT);
+
         panelRight.add(solutionLabelRight);
 
-        hintPanels = new JPanel[10]; //Number is numGames chosen
+        JPanel[] hintPanels = new JPanel[10];
 
+        //MAKE ARRAY OF BUTTONS IN PANEL
         for(int i = 0; i < hintPanels.length; i++){
             hintPanels[i] = new JPanel(new FlowLayout());
-            hintPanels[i].add(new JLabel("O O O O"));
+            hintPanels[i].add(new JLabel("O O O O"));       //make array of buttons
             hintPanels[i].setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
             panelRight.add(hintPanels[i]);
-            //add graphics - 4 circle lines - to each panel...new class or method : paintComponent
         }
 
-        hintsLabel = new JLabel("hints"); //set by numGames
+        JLabel hintsLabel = new JLabel("hints"); //set by numGames
+
         hintsLabel.setFont(GAME_FONT);
         hintsLabel.setForeground(Color.WHITE);
         hintsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         panelRight.add(hintsLabel);
 
         gameBoard.add(panelLeft);
@@ -278,18 +142,20 @@ public class GameBoardGUI extends Game {
     }
     private JPanel createPlayBoard(){
 
-        playPanel = new JPanel(new GridLayout(5, 1));
+        JPanel playPanel = new JPanel(new GridLayout(5, 1));
         playPanel.setBackground(Color.GRAY);
 
-        JLabel placeholder = new JLabel("   ");
-        playPanel.add(placeholder);
+        JButton saveButton = new JButton("SAVE GAME");
+        saveButton.setBackground(Color.WHITE);
+        saveButton.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.GRAY));
+        playPanel.add(saveButton);
 
-        colourButtonPanel = new JPanel(new GridLayout(4, 2));
+        JPanel colourButtonPanel = new JPanel(new GridLayout(4, 2));
         colourButtonPanel.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.WHITE));
 
-        colourButtons = new JButton[8];
+        JButton[] colourButtons = new JButton[8];
 
-        buttonColourList = new ArrayList<>();
+        ArrayList<Color> buttonColourList = new ArrayList<>();
         buttonColourList.add(Color.WHITE);
         buttonColourList.add(Color.YELLOW);
         buttonColourList.add(Color.GREEN);
@@ -309,7 +175,6 @@ public class GameBoardGUI extends Game {
                 public void mousePressed(MouseEvent e) {
 
                     if(guessEventCount < guessButtons.length)
-                        //else if condition for when solution being made
                         guessButtons[guessEventCount].setBackground(((JButton)e.getSource()).getBackground());
                     else {
                         System.out.print(guessEventCount);
@@ -321,7 +186,8 @@ public class GameBoardGUI extends Game {
             colourButtonPanel.add(colourButtons[i]);
         }
 
-        /*//add hidden button code
+        /*
+        //add hidden button code in expert level
         blankColour = new JButton("[blank]");
         blankColour.setBackground(Color.GRAY);
         blankColour.setForeground(Color.WHITE);
@@ -332,9 +198,9 @@ public class GameBoardGUI extends Game {
         JLabel placeholder2 = new JLabel("  ");
         playPanel.add(placeholder2);
 
-        guessPanel = new JPanel(new GridBagLayout());
+        JPanel guessPanel = new JPanel(new GridBagLayout());
         guessPanel.setBackground(Color.GRAY);
-        guessButtons = new JButton[4];
+        JButton[] guessButtons = new JButton[4];
 
         for(int i = 0; i < guessButtons.length; i++){
             //add graphics - 4 circle lines...new class or method : paintComponent
@@ -355,7 +221,7 @@ public class GameBoardGUI extends Game {
 
         playPanel.add(guessPanel);
 
-        makeGuess = new JButton("Make Guess");
+        JButton makeGuess = new JButton("Make Guess");
         makeGuess.setBackground(Color.WHITE);
         makeGuess.setFont(GAME_FONT);
         makeGuess.setBackground(Color.GRAY);
@@ -380,191 +246,118 @@ public class GameBoardGUI extends Game {
         return playPanel;
     }
 
-    protected static JButton createQuitButton(){
+    public static char[] createCodeComputer() {
 
-        JButton quitButton = new JButton("[Q]UIT");
-        quitButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui
-        quitButton.setBackground(Color.BLUE);
-        quitButton.setForeground(Color.BLACK);
-        quitButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+        int num;
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
+        char[] s = new char[4];
 
-        quitButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                System.exit(0);
-            }
-        });
+        for (int i = 0; i < 4; i++) {
+            num = (int)(Math.random()*7);
 
-        return quitButton;
+            s[i] = colours[num];
+        }
+        return s;
     }
 
-    protected static JButton createStartButton(){
+    //code for human player in multiplayer
+    public static char[] createCode(String play) {
 
-        JButton startButton = new JButton("[S]TART NEW GAME");
-        startButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui somehow?? before game is loaded....
-        startButton.setBackground(Color.ORANGE);
-        startButton.setForeground(Color.BLACK);
-        startButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+        char colour;
+        String colourAsString;
+        char[] s = new char[4];
 
-        startButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                GameBoardGUI.chooseGameOptions();
+
+        for (int i = 0; i < 4; i++) {
+
+           colourAsString = JOptionPane.showInputDialog("Please enter colour " + (i + 1) + " ");
+           colour = colourAsString.charAt(0);
+
+            while (!validateColour(colour) || !Character.isLetter(colour)) {
+                colourAsString = JOptionPane.showInputDialog("Please enter colour " + (i + 1) + " ");
+                colour = colourAsString.charAt(0);
             }
-        });
-
-        return startButton;
-    }
-    protected static JButton createLoadButton(){
-
-        JButton loadButton = new JButton("[L]OAD GAME");
-        loadButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui
-        loadButton.setBackground(Color.GREEN);
-        loadButton.setForeground(Color.BLACK);
-        loadButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        loadButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Saved game");
-                //open saved game files
-            }
-        });
-
-        return loadButton;
-    }
-    public static JButton createViewLeaderboardButton(){
-
-        JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
-        viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18)); //getFont from gui
-        viewLeaderBoardButton.setBackground(Color.MAGENTA);
-        viewLeaderBoardButton.setForeground(Color.BLACK);
-        viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Leaderboard");
-                //open saves files
-            }
-        });
-
-        return viewLeaderBoardButton;
+            s[i] = colour;
+        }
+        return s;
     }
 
-    public static void chooseGameOptions(){
+    public static boolean validateColour(char c) {
 
-        //player + game difficulty
-        JFrame choiceFrame = new JFrame();
-        JPanel optionsPanel = new JPanel(new GridLayout(1,2));
+        char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
+        ArrayList<Character> coloursList = new ArrayList<>();
 
-        Font buttonFont = new Font("Monospaced", Font.PLAIN, 18);
+        //if game is expert colours.add('K')
 
-        JPanel choicePanelLeft = new JPanel(new GridLayout(6, 1));
+        for (char colour : colours)
+            coloursList.add(colour);
 
-        JRadioButton singlePlayerButton = new JRadioButton("SINGLE PLAYER");
-        singlePlayerButton.setFont(buttonFont);
-        singlePlayerButton.setBackground(Color.DARK_GRAY);
-        singlePlayerButton.setForeground(Color.WHITE);
-        singlePlayerButton.setSelected(true);
+        for (Character ch : coloursList) {
+            if (ch == c)
+                return true;
+        }
 
-        JRadioButton multiPayerButton = new JRadioButton("MULTIPLAYER");
-        multiPayerButton.setFont(buttonFont);
-        multiPayerButton.setBackground(Color.DARK_GRAY);
-        multiPayerButton.setForeground(Color.WHITE);
+        return false;
+    }
 
-        JRadioButton kidsVersion = new JRadioButton("EASY");
-        kidsVersion.setFont(buttonFont);
-        kidsVersion.setBackground(Color.DARK_GRAY);
-        kidsVersion.setForeground(Color.WHITE);
-        kidsVersion.setSelected(true);
+    public static boolean[] compareCodeKids(char[] g, char[] s) {
 
-        JRadioButton classicVersion = new JRadioButton("CLASSIC");
-        classicVersion.setFont(buttonFont);
-        classicVersion.setBackground(Color.DARK_GRAY);
-        classicVersion.setForeground(Color.WHITE);
+        boolean[] h = new boolean[4];
+        int x, y;
 
-        JRadioButton expertVersion = new JRadioButton("EXPERT");
-        expertVersion.setFont(buttonFont);
-        expertVersion.setBackground(Color.DARK_GRAY);
-        expertVersion.setForeground(Color.WHITE);
-
-        JButton confirmButton = new JButton("START GAME");
-        confirmButton.setFont(buttonFont);
-        confirmButton.setBackground(Color.WHITE);
-        confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
-        confirmButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                //once all validation is done
-
-                GameBoardGUI newgame = new GameBoardGUI();
+        for (x = 0; x < g.length; x++) {
+            for (y = 0; y < s.length; y++) {
+                if (g[x] == s[y]) {
+                    h[x] = true;
+                    s[y] = 'X';
+                    break;
+                }
             }
-        });
+        }
+        return h;
+    }
+    public static int[] compareCodeClassic(char[] g, char[] s){ //reuse for expert with added extra colour
 
-        choicePanelLeft.add(singlePlayerButton);
-        choicePanelLeft.add(multiPayerButton);
-        choicePanelLeft.add(kidsVersion);
-        choicePanelLeft.add(classicVersion);
-        choicePanelLeft.add(expertVersion);
-        choicePanelLeft.add(confirmButton);
+        int [] h = {0, 0, 0, 0};
+        int x, y;
 
-        JPanel choicePanelRight = new JPanel(new GridLayout(12,1));
+        for(x = 0; x < s.length; x++){
+            for(y = 0; y < g.length; y++){
+                if(s[x] == g[y]){
+                    if(x == y){
+                        h[y] = 1;
+                        g[x] = 'X';
+                        break;
+                    }
+                    else if (y == 4){
+                        h[y-1] = 2;
+                    }
+                }
+            }
+        }
+        return h;
+    }
+    public static boolean checkWin(boolean[] h){
 
-        JLabel playerOneLabel = new JLabel("Enter Player One:");
-        JTextField playerOneName = new JTextField();//must be complete to continue if multi play
-        playerOneLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        playerOneLabel.setForeground(Color.WHITE);
-        playerOneName.setBackground(Color.LIGHT_GRAY);
-        playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-        playerOneName.setEditable(false); //set editable if multiplayer
+        int count = 0;
 
-
-        JLabel playerTwoLabel = new JLabel("Enter Player Two:");
-        JTextField playerTwoName = new JTextField("Computer");//must be complete to continue
-        playerTwoLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-        playerTwoLabel.setForeground(Color.WHITE);
-        playerTwoName.setBackground(Color.LIGHT_GRAY);
-        playerTwoName.setEditable(false); //set editable if multiplayer
-
-        JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
-        JTextField guessAmount = new JTextField();//must be complete to continue
-        guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-        guessAmount.setBackground(Color.LIGHT_GRAY);
-        guessAmountLabel.setForeground(Color.WHITE);
-        //validation code for textfield....
-
-        JLabel gameAmountLabel = new JLabel("Enter amount of Games (max 10):");
-        JTextField gameAmount = new JTextField();//must be complete to continue
-        gameAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-        gameAmount.setBackground(Color.LIGHT_GRAY);
-        gameAmountLabel.setForeground(Color.WHITE);
-        //validation code for textfield....
-
-        choicePanelRight.add(playerOneLabel);
-        choicePanelRight.add(playerOneName);
-        choicePanelRight.add(playerTwoLabel);
-        choicePanelRight.add(playerTwoName);
-        choicePanelRight.add(gameAmountLabel);
-        choicePanelRight.add(gameAmount);
-        choicePanelRight.add(guessAmountLabel);
-        choicePanelRight.add(guessAmount);
-
-        choicePanelLeft.setBackground(Color.LIGHT_GRAY);
-        choicePanelRight.setBackground(Color.DARK_GRAY);
-
-        optionsPanel.add(choicePanelLeft);
-        optionsPanel.add(choicePanelRight);
-
-        choiceFrame.add(optionsPanel);
-
-        choiceFrame.setLocation(550, 50);
-        choiceFrame.setSize(500,400);
-        choiceFrame.setResizable(false);
-        choiceFrame.setVisible(true);
+        for (boolean hint : h) {
+            if (hint)
+                count++;
+        }
+        return count == 4;
 
     }
+
+    public static boolean checkWinClassic(int[] h){
+
+        int count = 0;
+
+        for (int hint : h) {
+            if (hint == 1)
+                count++;
+        }
+        return count == 4;
+    }
+
 }

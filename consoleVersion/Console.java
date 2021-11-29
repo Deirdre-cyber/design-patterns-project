@@ -354,7 +354,7 @@ public class Console {
         return s;
     }
 
-    public static char[] createCodeComputerKids(String play) {
+    public static char[] createCodeComputer(String play) {
 
         int num;
         char[] colours = {'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v'};
