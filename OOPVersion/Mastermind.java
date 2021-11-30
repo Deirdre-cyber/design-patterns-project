@@ -11,6 +11,8 @@ public class Mastermind extends Game implements Serializable{
     private static int playButtonEventCount;
     private static Player playerOne;
     private static Player playerTwo;
+    private static int numGuesses;
+    private static int numGames;
 
     public Mastermind(Player[] players, int numberGames, int numberGuesses, String version) {
         super(players, numberGames, numberGuesses, version);
@@ -178,11 +180,11 @@ public class Mastermind extends Game implements Serializable{
         Font buttonFont = new Font("Monospaced", Font.PLAIN, 18);
 
         //Create Left Panel
-        JPanel choicePanelLeft = new JPanel(new GridLayout(8, 1));
+        JPanel choicePanelLeft = new JPanel(new GridLayout(10, 1));
         choicePanelLeft.setBackground(Color.DARK_GRAY);
 
         //Create Right Panel
-        JPanel choicePanelRight = new JPanel(new GridLayout(8,1));
+        JPanel choicePanelRight = new JPanel(new GridLayout(10,1));
         choicePanelRight.setBackground(Color.DARK_GRAY);
 
 
@@ -265,17 +267,25 @@ public class Mastermind extends Game implements Serializable{
         confirmPlayerButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                //validation - radio buttons are set correctly
-                playerOne = new Player(playerOneName.getText());
-                playerTwo = new Player(playerTwoName.getText());
+
+                //validate : PLayer One text box must not be empty
+                if(!playerOneName.getText().equals("")){
+                    playerOne = new Player(playerOneName.getText());
+                    playerTwo = new Player(playerTwoName.getText());
+
+                    //test code - REMOVE
+                    System.out.print(playerOne + "" + playerTwo);
+
+                    playButtonEventCount++;
+
+                    //set button inactive??
+                    confirmPlayerButton.setVisible(false);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Please enter a name for Player One",
+                            "Player One not Set", JOptionPane.ERROR_MESSAGE);
 
 
-
-                System.out.print(playerOne + "" + playerTwo);
-
-                playButtonEventCount++;
-                //set button inactive??
-                confirmPlayerButton.setVisible(false);
             }
         });
 
@@ -320,6 +330,26 @@ public class Mastermind extends Game implements Serializable{
         guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         guessAmount.setBackground(Color.LIGHT_GRAY);
 
+        //Create Guess Amount Confirm Button
+        JButton addGuessAmountButton = new JButton("Confirm Number of Games");
+        addGuessAmountButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        addGuessAmountButton.setForeground(Color.WHITE);
+        addGuessAmountButton.setBackground(Color.LIGHT_GRAY);
+
+        addGuessAmountButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(!guessAmount.getText().equals("")){
+
+                    numGuesses = numberValidator(guessAmount.getText());
+                    guessAmount.setText(String.format("%d", numGuesses));
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Enter number of guesses (max 10)",
+                            "No Number Entered", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
 
         //Create Game Amount Label
         JLabel gameAmountLabel = new JLabel("Enter amount of Games (max 10):");
@@ -330,6 +360,25 @@ public class Mastermind extends Game implements Serializable{
         JTextField gameAmount = new JTextField();//must be complete to continue
         gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         gameAmount.setBackground(Color.LIGHT_GRAY);
+
+        //Create Game Amount Confirm Button
+        JButton addGameAmountButton = new JButton("Confirm Number of Games");
+        addGameAmountButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        addGameAmountButton.setForeground(Color.WHITE);
+        addGameAmountButton.setBackground(Color.LIGHT_GRAY);
+
+        addGameAmountButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(!gameAmount.getText().equals("")){
+                    numGames = numberValidator(gameAmount.getText());
+                    gameAmount.setText(String.format("%d", numGames));
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Enter number of games (max 10)",
+                            "No Number Entered", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
 
         kidsVersion.addItemListener(new ItemListener() {
@@ -374,26 +423,48 @@ public class Mastermind extends Game implements Serializable{
         confirmButton.setBackground(Color.WHITE);
         confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
 
+        //Create 'START GAME' Button
+        JButton playGame = new JButton("START GAME");
+        playGame.setFont(buttonFont);
+        playGame.setBackground(Color.CYAN);
+        playGame.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
+        playGame.setVisible(false);
+
+
         confirmButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
 
                 //improve this....
-                //validation : players must be set, validate numbers
-
-                int numGames = numberValidator(gameAmount.getText()), numGuesses = numberValidator(guessAmount.getText());
 
                 if(kidsVersion.isSelected() && playButtonEventCount == 1){
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Kid's Version");
+
+                    //test code - REMOVE
                     System.out.print(newGame);
+
+                    confirmButton.setVisible(false);
+                    playGame.setVisible(true);
                 }
                 else if(classicVersion.isSelected() && playButtonEventCount == 1){
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Classic Version");
+
+                    //test code - REMOVE
                     System.out.print(newGame);
+
+                    confirmButton.setVisible(false);
+                    playGame.setVisible(true);
+
                 }
                 else if(kidsVersion.isSelected() && playButtonEventCount == 1){
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Expert Version");
+
+                    //test code - REMOVE
                     System.out.print(newGame);
+                    //show play game button which launches GUI
+
+                    confirmButton.setVisible(false);
+                    playGame.setVisible(true);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "Please select Game Version and/or Set PLayer(s)",
@@ -407,13 +478,16 @@ public class Mastermind extends Game implements Serializable{
         choicePanelRight.add(expertVersion);
         choicePanelRight.add(gameAmountLabel);
         choicePanelRight.add(gameAmount);
+        choicePanelRight.add(addGameAmountButton);
         choicePanelRight.add(guessAmountLabel);
         choicePanelRight.add(guessAmount);
+        choicePanelRight.add(addGuessAmountButton);
         choicePanelRight.add(confirmButton);
+
 
         //Add Left Panel and Right Panel to Main Panel
         optionsPanel.add(choicePanelLeft);
-        optionsPanel.add(Box.createVerticalStrut(10));
+        optionsPanel.add(playGame);
         optionsPanel.add(choicePanelRight);
 
         //Add main Panel to Frame
@@ -427,28 +501,27 @@ public class Mastermind extends Game implements Serializable{
     }
     public static int numberValidator(String s) {
 
-        String choice;
         int num = 0;
         boolean valid;
         int i;
 
-        choice = JOptionPane.showInputDialog(null,"Please enter a valid number");
-
         valid = false;
+
         while (!valid) {
-            for (i = 0; i < choice.length(); i++) {
-                if (!Character.isDigit(choice.charAt(i))) {
+            for (i = 0; i < s.length(); i++) {
+                if (!Character.isDigit(s.charAt(i))) {
                     break;
                 }
             }
-            if (i == choice.length() && !choice.equals("")) {
-                num = Integer.parseInt(choice);
+            if (i == s.length() && !s.equals("")) {
+                num = Integer.parseInt(s);
 
                 if (num >= 1 && num <= 10) {
                     valid = true;
                 }
-            } else {
-                JOptionPane.showMessageDialog(null,"Invalid! Please enter a valid number");
+                else {
+                s = JOptionPane.showInputDialog(null,"Invalid! Please enter a valid number");
+                }
             }
         }
         return num;
