@@ -10,7 +10,6 @@ public class Game{
     private int numberGames;    //set from gui
     private int numberGuesses;  //set from gui
     private String version;     //set from gui
-    private ArrayList<Color> pegColours;
 
     public Game(Player[] players, int numberGames, int numberGuesses, String version) {
         setPlayer(players);

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Mastermind extends Game implements Serializable{
 
@@ -13,25 +13,13 @@ public class Mastermind extends Game implements Serializable{
     private static Player playerTwo;
     private static int numGuesses;
     private static int numGames;
+    private static int guessEventCount;
+    private static final Font GAME_FONT = new Font("Monospaced", Font.PLAIN, 22);
+    private ArrayList<Color> Colours;
 
     public Mastermind(Player[] players, int numberGames, int numberGuesses, String version) {
         super(players, numberGames, numberGuesses, version);
     }
-
-
-
-    //New Game - Open options GUI
-    //Options GUI - single/multi : enter name of player(s) : Button to set player
-    // kids/classic/expert : enter number of guesses and games:  Button to set choices
-
-    //Once all validated open GAMEBOARD - details needed [name(s), numguesses, numgames]
-
-
-    //Load game - Open Saved file : if doesn't exist 'Error'
-
-    //View Leaderboard - JOptionpane textarea with 'table' of top players
-
-    //Quit - Confirm and quit
 
     public static void main(String[] args) {
 
@@ -77,6 +65,7 @@ public class Mastermind extends Game implements Serializable{
         return startButton;
     }
 
+    //CREATE LOAD BUTTON - Open Saved file : if doesn't exist 'Error'
     private static JButton createLoadButton(){
 
         JButton loadButton = new JButton("[L]OAD GAME");
@@ -88,30 +77,8 @@ public class Mastermind extends Game implements Serializable{
         loadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Saved game");
+
                 //open last game state - serialisation
-                File loadGame = new File("C:/Users/College Girl/IdeaProjects/miniproject/savefile.data");
-
-            }
-        });
-
-        return loadButton;
-    }
-
-    private static JButton createViewLeaderboardButton(){
-
-        JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
-        viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18));
-        viewLeaderBoardButton.setBackground(Color.MAGENTA);
-        viewLeaderBoardButton.setForeground(Color.BLACK);
-        viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Leaderboard");
-                //open saves files - serialisation
-
                 File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/savefile.data");
 
                 try {
@@ -136,13 +103,59 @@ public class Mastermind extends Game implements Serializable{
                             "File Error", JOptionPane.ERROR_MESSAGE);
                 }
 
+            }
+        });
 
+        return loadButton;
+    }
+
+
+    //CREATE LEADERBOARD BUTTON - JOptionpane textarea with 'table' of top players
+    private static JButton createViewLeaderboardButton(){
+
+        JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
+        viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18));
+        viewLeaderBoardButton.setBackground(Color.MAGENTA);
+        viewLeaderBoardButton.setForeground(Color.BLACK);
+        viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+
+        viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                //open saves leaderboard files - serialisation
+                //Leaderboard newLeaderboard = new Leaderboard(new Player[]{playerOne,playerTwo});
+
+                File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/leaderboardfile.data");
+
+                try {
+                    FileInputStream inStream = new FileInputStream(leaderboardFile);
+
+                    int fileSize = (int)leaderboardFile.length();
+                    byte[] leaderboardArray = new byte[fileSize];
+
+                    inStream.read(leaderboardArray);
+
+                    //String and add to textArea and display
+
+                    inStream.close();
+
+                } catch (FileNotFoundException ex) {
+
+                    JOptionPane.showMessageDialog(null, "No Files Found",
+                            "File Not Found", JOptionPane.ERROR_MESSAGE);
+
+                } catch (IOException ioException) {
+                    JOptionPane.showMessageDialog(null, "Error with file",
+                            "File Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
         return viewLeaderBoardButton;
     }
 
+    //CREATE QUIT BUTTON
     private static JButton createQuitButton(){
 
         JButton quitButton = new JButton("[Q]UIT");
@@ -166,7 +179,6 @@ public class Mastermind extends Game implements Serializable{
     }
 
     //----------PLAYER & GAME OPTIONS---------------------
-
     private static void chooseGameOptions(){
 
         //Create Frame
@@ -210,7 +222,7 @@ public class Mastermind extends Game implements Serializable{
         playerOneLabel.setForeground(Color.WHITE);
 
         //Create Player One Text Box
-        JTextField playerOneName = new JTextField();//must be complete to continue if multi play
+        JTextField playerOneName = new JTextField();
         playerOneName.setBackground(Color.LIGHT_GRAY);
         playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
 
@@ -221,7 +233,7 @@ public class Mastermind extends Game implements Serializable{
         playerTwoLabel.setForeground(Color.WHITE);
 
         //Create Player Two Text Box
-        JTextField playerTwoName = new JTextField("Computer");//must be complete to continue
+        JTextField playerTwoName = new JTextField("Computer");
         playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         playerTwoName.setBackground(Color.GRAY);
         playerTwoName.setEditable(false);
@@ -252,7 +264,6 @@ public class Mastermind extends Game implements Serializable{
                     playerTwoName.setEditable(true);
                     playerTwoName.setText(null);
                     playerOneName.requestFocus();
-
                 }
             }
         });
@@ -284,8 +295,6 @@ public class Mastermind extends Game implements Serializable{
                 else
                     JOptionPane.showMessageDialog(null, "Please enter a name for Player One",
                             "Player One not Set", JOptionPane.ERROR_MESSAGE);
-
-
             }
         });
 
@@ -299,6 +308,7 @@ public class Mastermind extends Game implements Serializable{
         choicePanelLeft.add(playerTwoLabel);
         choicePanelLeft.add(playerTwoName);
         choicePanelLeft.add(confirmPlayerButton);
+
 
         //-----GAME VERSION OPTIONS - RIGHT PANEL---------------------
 
@@ -320,6 +330,8 @@ public class Mastermind extends Game implements Serializable{
         expertVersion.setBackground(Color.DARK_GRAY);
         expertVersion.setForeground(Color.WHITE);
 
+
+
         //Create Guess Amount Label
         JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
         guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -340,7 +352,6 @@ public class Mastermind extends Game implements Serializable{
             @Override
             public void mousePressed(MouseEvent e) {
                 if(!guessAmount.getText().equals("")){
-
                     numGuesses = numberValidator(guessAmount.getText());
                     guessAmount.setText(String.format("%d", numGuesses));
                 }
@@ -381,6 +392,7 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
+        //GAME VERSION RADIO BUTTON LISTENERS
         kidsVersion.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -417,8 +429,8 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
-        //Create "Confirm" button
-        JButton confirmButton = new JButton("SET GAME");
+        //Create "SET RULES" button
+        JButton confirmButton = new JButton("SET RULES");
         confirmButton.setFont(buttonFont);
         confirmButton.setBackground(Color.WHITE);
         confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
@@ -430,6 +442,33 @@ public class Mastermind extends Game implements Serializable{
         playGame.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
         playGame.setVisible(false);
 
+        //Once all validated open GAMEBOARD - details needed [name(s), numguesses, numgames]
+        playGame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                //CREATE GAME BOARD GUI - REMADE EACH GAME : loop number of games
+
+                JFrame game = new JFrame("Mastermind");
+
+                JPanel mainBoard = new JPanel();
+                mainBoard.setLayout(new GridLayout(1,2));
+
+                mainBoard.add(createGameBoard());
+                mainBoard.add(createPlayBoard());
+
+                game.add(mainBoard);
+
+                game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                game.setLocation(550, 50);
+                game.setSize(500,600);
+                game.setResizable(false);
+                game.setVisible(true);
+
+                //once finished ask to save game
+                //add to leaderboard
+            }
+        });
 
         confirmButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -438,6 +477,7 @@ public class Mastermind extends Game implements Serializable{
                 //improve this....
 
                 if(kidsVersion.isSelected() && playButtonEventCount == 1){
+
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Kid's Version");
 
                     //test code - REMOVE
@@ -447,6 +487,7 @@ public class Mastermind extends Game implements Serializable{
                     playGame.setVisible(true);
                 }
                 else if(classicVersion.isSelected() && playButtonEventCount == 1){
+
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Classic Version");
 
                     //test code - REMOVE
@@ -457,6 +498,7 @@ public class Mastermind extends Game implements Serializable{
 
                 }
                 else if(kidsVersion.isSelected() && playButtonEventCount == 1){
+
                     Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Expert Version");
 
                     //test code - REMOVE
@@ -527,6 +569,223 @@ public class Mastermind extends Game implements Serializable{
         return num;
     }
 
+    private static JPanel createGameBoard(){
+
+        //CREATE GAMEBOARD
+        JPanel gameBoard = new JPanel(new GridLayout(1, 2));
+
+        //CREATE LEFT PANEL - GUESSES AND HINTS
+        JPanel panelLeft = new JPanel(new GridLayout(12, 1));
+        panelLeft.setBackground(Color.GRAY);
+
+        if(playerTwo.getPlayer().equals("Computer")){
+            System.out.print(playerTwo);
+        }
+        //----------TO BE SHOWN WHILE PLAYER ONE SELECTING (MULTIPLAYER)-----------
+
+        /*JPanel solutionPanel = new JPanel();
+
+        //BETTER WAY TO CHECK PLAYERS......
+        String players="";
+
+        for(int i = 0; i < getPlayer().length; i++){
+            players += getPlayer()[i] + "";
+            System.out.print(players);
+        }
+        char[] computerSolution;
+
+        if(players.contains("Computer")){
+            computerSolution = createCodeComputer();
+        }
+
+        JButton[] solutionButtons = new JButton[4];     //set by createCode() in Player
+
+        for(int j = 0; j < solutionButtons.length; j++) {
+
+            solutionButtons[j] = new JButton("  ");
+            solutionButtons[j].setBackground(Color.LIGHT_GRAY);
+
+            solutionButtons[j].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (((JButton) (e.getSource())).getBackground() != Color.LIGHT_GRAY) {
+                        ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
+                        guessEventCount--; //make sure this works
+                        //also make sure can't delete once guess button pressed
+                    }
+                }
+            });
+            solutionPanel.add(solutionButtons[j]);
+        }
+        panelLeft.add(solutionPanel);*/
+
+        //TO BE SHOWN DURING GAME PLAY
+        JLabel solutionLabelLeft = new JLabel("MASTER");
+        solutionLabelLeft.setFont(GAME_FONT);
+        solutionLabelLeft.setForeground(Color.WHITE);
+        solutionLabelLeft.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        panelLeft.add(solutionLabelLeft);
+
+        JPanel[] guessPanels = new JPanel[10]; //Number is numGuesses chosen
+
+        //MAKE ARRAY OF BUTTONS IN EACH PANEL
+        for(int i = 0; i < guessPanels.length; i++){
+            guessPanels[i] = new JPanel(new FlowLayout());
+            guessPanels[i].setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            guessPanels[i].setBackground(Color.WHITE);
+            panelLeft.add(guessPanels[i]);
+        }
+
+        JLabel gameCounterLabel = new JLabel("Game No" + numGames); //after game play "You win/you lose"
+        gameCounterLabel.setFont(GAME_FONT);
+        gameCounterLabel.setForeground(Color.WHITE);
+        gameCounterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panelLeft.add(gameCounterLabel);
+
+        //RIGHT PANEL : HINTS PANEL
+        JPanel panelRight = new JPanel(new GridLayout(12, 1));
+        panelRight.setBackground(Color.GRAY);
+
+        JLabel solutionLabelRight = new JLabel("MIND");
+        solutionLabelRight.setFont(GAME_FONT);
+        solutionLabelRight.setForeground(Color.WHITE);
+        solutionLabelRight.setHorizontalAlignment(SwingConstants.LEFT);
+
+        panelRight.add(solutionLabelRight);
+
+        JPanel[] hintPanels = new JPanel[10];
+
+        //MAKE ARRAY OF BUTTONS IN PANEL
+        for(int i = 0; i < hintPanels.length; i++){
+            hintPanels[i] = new JPanel(new FlowLayout());
+            hintPanels[i].add(new JLabel("O O O O"));       //make array of buttons
+            hintPanels[i].setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+            panelRight.add(hintPanels[i]);
+        }
+
+        JLabel hintsLabel = new JLabel("hints"); //set by numGames
+
+        hintsLabel.setFont(GAME_FONT);
+        hintsLabel.setForeground(Color.WHITE);
+        hintsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panelRight.add(hintsLabel);
+
+        gameBoard.add(panelLeft);
+        gameBoard.add(panelRight);
+
+        return gameBoard;
+    }
+
+    private static JPanel createPlayBoard(){
+
+
+        JPanel playPanel = new JPanel(new GridLayout(5, 1));
+        playPanel.setBackground(Color.GRAY);
+
+        JButton saveButton = new JButton("SAVE GAME");
+        saveButton.setBackground(Color.WHITE);
+        saveButton.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.GRAY));
+        playPanel.add(saveButton);
+
+        JPanel colourButtonPanel = new JPanel(new GridLayout(4, 2));
+        colourButtonPanel.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.WHITE));
+
+        JButton[] colourButtons = new JButton[8];
+
+        ArrayList<Color> buttonColourList = new ArrayList<>();
+        buttonColourList.add(Color.WHITE);
+        buttonColourList.add(Color.YELLOW);
+        buttonColourList.add(Color.GREEN);
+        buttonColourList.add(Color.RED);
+        buttonColourList.add(Color.BLUE);
+        buttonColourList.add(Color.PINK);
+        buttonColourList.add(Color.CYAN);
+        buttonColourList.add(Color.ORANGE);
+
+        for(int i = 0; i < buttonColourList.size(); i++){
+            colourButtons[i] = new JButton();
+            colourButtons[i].setBackground(buttonColourList.get(i));
+            colourButtons[i].setForeground(buttonColourList.get(i));
+            colourButtons[i].setBorder(BorderFactory.createMatteBorder(2,2,2,2, Color.GRAY));
+
+            /*colourButtons[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                    if(guessEventCount < guessButtons.length)
+                        guessButtons[guessEventCount].setBackground(((JButton)e.getSource()).getBackground());
+                    else {
+                        System.out.print(guessEventCount);
+                        guessEventCount = 0;
+                    }
+                    guessEventCount++;
+                }
+            });
+            colourButtonPanel.add(colourButtons[i]);*/
+        }
+
+        /*
+        //add hidden button code in expert level
+        blankColour = new JButton("[blank]");
+        blankColour.setBackground(Color.GRAY);
+        blankColour.setForeground(Color.WHITE);
+        colourButtonPanel.add(blankColour);*/
+
+        playPanel.add(colourButtonPanel);
+
+        JLabel placeholder2 = new JLabel("  ");
+        playPanel.add(placeholder2);
+
+        JPanel guessPanel = new JPanel(new GridBagLayout());
+        guessPanel.setBackground(Color.GRAY);
+        JButton[] guessButtons = new JButton[4];
+
+        for(int i = 0; i < guessButtons.length; i++){
+            //add graphics - 4 circle lines...new class or method : paintComponent
+            guessButtons[i] = new JButton("  ");
+            guessButtons[i].setBackground(Color.LIGHT_GRAY);
+            guessButtons[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
+                        ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
+                        guessEventCount--; //make sure this works
+                        //also make sure can't delete once guess button pressed
+                    }
+                }
+            });
+            guessPanel.add(guessButtons[i]);
+        }
+
+        playPanel.add(guessPanel);
+
+        JButton makeGuess = new JButton("Make Guess");
+        makeGuess.setBackground(Color.WHITE);
+        makeGuess.setFont(GAME_FONT);
+        makeGuess.setBackground(Color.GRAY);
+        makeGuess.setForeground(Color.WHITE);
+        makeGuess.setBorder(BorderFactory.createMatteBorder(8,8,8,8,Color.WHITE));
+        makeGuess.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(guessEventCount == 4){      //guess event must be correct
+                    JOptionPane.showMessageDialog(null, "Guess made");
+                    //guessPanels[1].add(guessPanel);
+                    //increment guess counter etc
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "You have not completed your guess",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        playPanel.add(makeGuess);
+
+        return playPanel;
+    }
 }
 
 
