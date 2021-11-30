@@ -6,9 +6,9 @@ import java.util.Arrays;
 
 public class Game{
 
-    private Player[] players;    //stores two players
-    private int numberGames;    //set from gui
-    private int numberGuesses;  //set from gui
+    private static Player[] players;    //stores two players
+    private static int numberGames;    //set from gui
+    private static int numberGuesses;  //set from gui
     private String version;     //set from gui
 
     public Game(Player[] players, int numberGames, int numberGuesses, String version) {
@@ -18,29 +18,29 @@ public class Game{
         setVersion(version);
     }
 
-    public Player[] getPlayer() {
+    public static Player[] getPlayer() {
         return Arrays.copyOf(players, players.length);
     }
 
-    public void setPlayer(Player[] player) {
+    public static void setPlayer(Player[] player) {
         if(player != null)
-            this.players = Arrays.copyOf(player, player.length);
+            players = Arrays.copyOf(player, player.length);
     }
 
-    public int getNumberGames() {
+    public static int getNumberGames() {
         return numberGames;
     }
 
-    public void setNumberGames(int numberGames) {
-        this.numberGames = numberGames;
+    public static void setNumberGames(int numberGames) {
+        Game.numberGames = numberGames;
     }
 
-    public int getNumberGuesses() {
+    public static int getNumberGuesses() {
         return numberGuesses;
     }
 
-    public void setNumberGuesses(int numberGuesses) {
-        this.numberGuesses = numberGuesses;
+    public static void setNumberGuesses(int numberGuesses) {
+        Game.numberGuesses = numberGuesses;
     }
 
     public String getVersion() {
