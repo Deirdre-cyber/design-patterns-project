@@ -30,6 +30,6 @@ public class Player{
 
     @Override
     public String toString() {
-        return "Player: " + getPlayer() + "\nTotal Wins: " + getNumberWins();
+        return "\nPlayer: " + getPlayer() + "\nTotal Wins: " + getNumberWins();
     }
 }

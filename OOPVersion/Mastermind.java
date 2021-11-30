@@ -3,57 +3,145 @@ package OOPVersion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.Arrays;
 
-public class Mastermind extends Game{
+public class Mastermind extends Game implements Serializable{
+
+    private static int playButtonEventCount;
+    private static Player playerOne;
+    private static Player playerTwo;
+
+    public Mastermind(Player[] players, int numberGames, int numberGuesses, String version) {
+        super(players, numberGames, numberGuesses, version);
+    }
+
+
+
+    //New Game - Open options GUI
+    //Options GUI - single/multi : enter name of player(s) : Button to set player
+    // kids/classic/expert : enter number of guesses and games:  Button to set choices
+
+    //Once all validated open GAMEBOARD - details needed [name(s), numguesses, numgames]
+
+
+    //Load game - Open Saved file : if doesn't exist 'Error'
+
+    //View Leaderboard - JOptionpane textarea with 'table' of top players
+
+    //Quit - Confirm and quit
 
     public static void main(String[] args) {
 
-        //CREATE GAME OPTIONS GUI
+        //FIRST GUI - New game, Load game, View Leaderboard, Quit (keyboardListeners and mouseListeners)
+
         JFrame game = new JFrame("MASTERMIND");
 
-        JPanel startGamePanel = new JPanel(new GridLayout(4, 1));
-        game.add(startGamePanel);
+        JPanel gameOptionsPanel = new JPanel(new GridLayout(4, 1));
+        game.add(gameOptionsPanel);
 
-        startGamePanel.add(createStartButton());
-        startGamePanel.add(createLoadButton());
-        startGamePanel.add(createViewLeaderboardButton());
-        startGamePanel.add(createQuitButton());
+        //Create Buttons
+        gameOptionsPanel.add(createStartButton());
+        gameOptionsPanel.add(createLoadButton());
+        gameOptionsPanel.add(createViewLeaderboardButton());
+        gameOptionsPanel.add(createQuitButton());
 
-        startGamePanel.setFocusable(true);
-        //OPTION GUI KEYBOARD
-        startGamePanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_S){
-                    chooseGameOptions();
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_L){
-                    JOptionPane.showMessageDialog(null, "Load Saved game");
-                    //Load last game state with serialisation - add save game button/key listener
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_V){
-                    JOptionPane.showMessageDialog(null, "Load Leaderboard");
-                    //load
-                }
-                else if(e.getKeyCode() == KeyEvent.VK_Q){
-                    int quit = JOptionPane.showConfirmDialog(null, "Are you sure you ant to quit?",
-                            "QUIT", JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    if(quit == 1)
-                        System.exit(0);
-                }
-            }
-        });
+        gameOptionsPanel.setFocusable(true);
 
         game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game.setLocation(600, 50);
-        game.setSize(400,400);
+        game.setSize(400, 400);
         game.setResizable(false);
         game.setVisible(true);
     }
 
-    //OPTION GUI BUTTONS
-    protected static JButton createQuitButton(){
+    //----------------USER DEFINED METHODS : START OPTIONS CREATE BUTTONS----------------------------
+
+    private static JButton createStartButton(){
+
+        JButton startButton = new JButton("[S]TART NEW GAME");
+        startButton.setFont(new Font("Monospaced", Font.BOLD, 18));
+        startButton.setBackground(Color.ORANGE);
+        startButton.setForeground(Color.BLACK);
+        startButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+
+        startButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                chooseGameOptions();
+            }
+        });
+
+        return startButton;
+    }
+
+    private static JButton createLoadButton(){
+
+        JButton loadButton = new JButton("[L]OAD GAME");
+        loadButton.setFont(new Font("Monospaced", Font.BOLD, 18));
+        loadButton.setBackground(Color.GREEN);
+        loadButton.setForeground(Color.BLACK);
+        loadButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+
+        loadButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Load Saved game");
+                //open last game state - serialisation
+                File loadGame = new File("C:/Users/College Girl/IdeaProjects/miniproject/savefile.data");
+
+            }
+        });
+
+        return loadButton;
+    }
+
+    private static JButton createViewLeaderboardButton(){
+
+        JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
+        viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18));
+        viewLeaderBoardButton.setBackground(Color.MAGENTA);
+        viewLeaderBoardButton.setForeground(Color.BLACK);
+        viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
+
+        viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Load Leaderboard");
+                //open saves files - serialisation
+
+                File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/savefile.data");
+
+                try {
+                    FileInputStream inStream = new FileInputStream(leaderboardFile);
+
+                    int fileSize = (int)leaderboardFile.length();
+                    byte[] leaderboardArray = new byte[fileSize];
+
+                    inStream.read(leaderboardArray);
+
+                    //String and add to textArea and display
+
+                    inStream.close();
+
+                } catch (FileNotFoundException ex) {
+
+                    JOptionPane.showMessageDialog(null, "No Files Found",
+                            "File Not Found", JOptionPane.ERROR_MESSAGE);
+
+                } catch (IOException ioException) {
+                    JOptionPane.showMessageDialog(null, "Error with file",
+                            "File Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+
+            }
+        });
+
+        return viewLeaderBoardButton;
+    }
+
+    private static JButton createQuitButton(){
 
         JButton quitButton = new JButton("[Q]UIT");
         quitButton.setFont(new Font("Monospaced", Font.BOLD, 18));
@@ -75,128 +163,68 @@ public class Mastermind extends Game{
         return quitButton;
     }
 
-    protected static JButton createStartButton(){
-
-        JButton startButton = new JButton("[S]TART NEW GAME");
-        startButton.setFont(new Font("Monospaced", Font.BOLD, 18));
-        startButton.setBackground(Color.ORANGE);
-        startButton.setForeground(Color.BLACK);
-        startButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        startButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                chooseGameOptions();
-            }
-        });
-
-        return startButton;
-    }
-    protected static JButton createLoadButton(){
-
-        JButton loadButton = new JButton("[L]OAD GAME");
-        loadButton.setFont(new Font("Monospaced", Font.BOLD, 18));
-        loadButton.setBackground(Color.GREEN);
-        loadButton.setForeground(Color.BLACK);
-        loadButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        loadButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Saved game");
-                //open last game state - serialisation
-            }
-        });
-
-        return loadButton;
-    }
-    public static JButton createViewLeaderboardButton(){
-
-        JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
-        viewLeaderBoardButton.setFont(new Font("Monospaced", Font.BOLD, 18));
-        viewLeaderBoardButton.setBackground(Color.MAGENTA);
-        viewLeaderBoardButton.setForeground(Color.BLACK);
-        viewLeaderBoardButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.GRAY));
-
-        viewLeaderBoardButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Load Leaderboard");
-                //open saves files - serialisation
-            }
-        });
-
-        return viewLeaderBoardButton;
-    }
+    //----------PLAYER & GAME OPTIONS---------------------
 
     private static void chooseGameOptions(){
 
+        //Create Frame
         JFrame choiceFrame = new JFrame();
-        JPanel optionsPanel = new JPanel(new GridLayout(1,2));
 
+        //Create Panel
+        JPanel optionsPanel = new JPanel(new GridLayout(1,3));
+        optionsPanel.setBackground(Color.DARK_GRAY);
+
+        //Create font for buttons
         Font buttonFont = new Font("Monospaced", Font.PLAIN, 18);
 
-        JPanel choicePanelLeft = new JPanel(new GridLayout(6, 1));
+        //Create Left Panel
+        JPanel choicePanelLeft = new JPanel(new GridLayout(8, 1));
+        choicePanelLeft.setBackground(Color.DARK_GRAY);
 
-        //PLAYER OPTIONS
+        //Create Right Panel
+        JPanel choicePanelRight = new JPanel(new GridLayout(8,1));
+        choicePanelRight.setBackground(Color.DARK_GRAY);
+
+
+        //-----PLAYER OPTIONS - LEFT PANEL--------------------------
+
+        //Create single player radio button
         JRadioButton singlePlayerButton = new JRadioButton("SINGLE PLAYER");
-        singlePlayerButton.setFont(buttonFont);
+        singlePlayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
         singlePlayerButton.setBackground(Color.DARK_GRAY);
         singlePlayerButton.setForeground(Color.WHITE);
         singlePlayerButton.setSelected(true);
 
+        //Create multi player radio button
         JRadioButton multiPayerButton = new JRadioButton("MULTIPLAYER");
-        multiPayerButton.setFont(buttonFont);
+        multiPayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
         multiPayerButton.setBackground(Color.DARK_GRAY);
         multiPayerButton.setForeground(Color.WHITE);
 
-
-        //GAME VERSION OPTIONS
-        JRadioButton kidsVersion = new JRadioButton("EASY");
-        kidsVersion.setFont(buttonFont);
-        kidsVersion.setBackground(Color.DARK_GRAY);
-        kidsVersion.setForeground(Color.WHITE);
-        kidsVersion.setSelected(true);
-
-        JRadioButton classicVersion = new JRadioButton("CLASSIC");
-        classicVersion.setFont(buttonFont);
-        classicVersion.setBackground(Color.DARK_GRAY);
-        classicVersion.setForeground(Color.WHITE);
-
-        JRadioButton expertVersion = new JRadioButton("EXPERT");
-        expertVersion.setFont(buttonFont);
-        expertVersion.setBackground(Color.DARK_GRAY);
-        expertVersion.setForeground(Color.WHITE);
-
-        JButton confirmButton = new JButton("START GAME");
-        confirmButton.setFont(buttonFont);
-        confirmButton.setBackground(Color.WHITE);
-        confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
-
-        choicePanelLeft.add(singlePlayerButton);
-        choicePanelLeft.add(multiPayerButton);
-        choicePanelLeft.add(kidsVersion);
-        choicePanelLeft.add(classicVersion);
-        choicePanelLeft.add(expertVersion);
-        choicePanelLeft.add(confirmButton);
-
-        JPanel choicePanelRight = new JPanel(new GridLayout(12,1));
-
+        //Create Player One Label
         JLabel playerOneLabel = new JLabel("Enter Player One:");
-        JTextField playerOneName = new JTextField();//must be complete to continue if multi play
         playerOneLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        playerOneLabel.setBackground(Color.BLUE);
         playerOneLabel.setForeground(Color.WHITE);
+
+        //Create Player One Text Box
+        JTextField playerOneName = new JTextField();//must be complete to continue if multi play
         playerOneName.setBackground(Color.LIGHT_GRAY);
         playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
 
+        //Create Player Two Label
         JLabel playerTwoLabel = new JLabel("Enter Player Two:");
-        JTextField playerTwoName = new JTextField("Computer");//must be complete to continue
         playerTwoLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        playerTwoLabel.setBackground(Color.BLUE);
         playerTwoLabel.setForeground(Color.WHITE);
-        playerTwoName.setBackground(Color.GRAY);
-        playerTwoName.setEditable(false); //set editable if multiplayer
 
+        //Create Player Two Text Box
+        JTextField playerTwoName = new JTextField("Computer");//must be complete to continue
+        playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        playerTwoName.setBackground(Color.GRAY);
+        playerTwoName.setEditable(false);
+
+        //Single Player item listener
         singlePlayerButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -211,6 +239,7 @@ public class Mastermind extends Game{
             }
         });
 
+        //Multi Player item listener
         multiPayerButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -226,19 +255,82 @@ public class Mastermind extends Game{
             }
         });
 
+        //Create Confirm player options
+        JButton confirmPlayerButton = new JButton("ADD PLAYER");
+        confirmPlayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        confirmPlayerButton.setBackground(Color.WHITE);
+        confirmPlayerButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
+
+        //Confirm player options mouse listener
+        confirmPlayerButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                //validation - radio buttons are set correctly
+                playerOne = new Player(playerOneName.getText());
+                playerTwo = new Player(playerTwoName.getText());
+
+
+
+                System.out.print(playerOne + "" + playerTwo);
+
+                playButtonEventCount++;
+                //set button inactive??
+                confirmPlayerButton.setVisible(false);
+            }
+        });
+
+
+        //add all components to Left Panel
+        choicePanelLeft.add(singlePlayerButton);
+        choicePanelLeft.add(multiPayerButton);
+        choicePanelLeft.add(Box.createHorizontalStrut(10));  //only need size if use other layout manager
+        choicePanelLeft.add(playerOneLabel);
+        choicePanelLeft.add(playerOneName);
+        choicePanelLeft.add(playerTwoLabel);
+        choicePanelLeft.add(playerTwoName);
+        choicePanelLeft.add(confirmPlayerButton);
+
+        //-----GAME VERSION OPTIONS - RIGHT PANEL---------------------
+
+        //Create kids version radio button
+        JRadioButton kidsVersion = new JRadioButton("EASY");
+        kidsVersion.setFont(buttonFont);
+        kidsVersion.setBackground(Color.DARK_GRAY);
+        kidsVersion.setForeground(Color.WHITE);
+
+        //Create classic version radio button
+        JRadioButton classicVersion = new JRadioButton("CLASSIC");
+        classicVersion.setFont(buttonFont);
+        classicVersion.setBackground(Color.DARK_GRAY);
+        classicVersion.setForeground(Color.WHITE);
+
+        //Create expert version radio button
+        JRadioButton expertVersion = new JRadioButton("EXPERT");
+        expertVersion.setFont(buttonFont);
+        expertVersion.setBackground(Color.DARK_GRAY);
+        expertVersion.setForeground(Color.WHITE);
+
+        //Create Guess Amount Label
         JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
-        JTextField guessAmount = new JTextField();//must be complete to continue
         guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-        guessAmount.setBackground(Color.LIGHT_GRAY);
         guessAmountLabel.setForeground(Color.WHITE);
 
+        //Create Guess Amount Text Box
+        JTextField guessAmount = new JTextField();
+        guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        guessAmount.setBackground(Color.LIGHT_GRAY);
+
+
+        //Create Game Amount Label
         JLabel gameAmountLabel = new JLabel("Enter amount of Games (max 10):");
-        JTextField gameAmount = new JTextField();//must be complete to continue
         gameAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        gameAmountLabel.setForeground(Color.WHITE);
+
+        //Create Game Amount Text Box
+        JTextField gameAmount = new JTextField();//must be complete to continue
         gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         gameAmount.setBackground(Color.LIGHT_GRAY);
-        gameAmountLabel.setForeground(Color.WHITE);
+
 
         kidsVersion.addItemListener(new ItemListener() {
             @Override
@@ -275,125 +367,64 @@ public class Mastermind extends Game{
             }
         });
 
-        gameAmount.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(e.getActionCommand() != null){
-                    numberValidator(e.getActionCommand());
-                    //why isn't validation working??
-                }
-                else
-                    JOptionPane.showMessageDialog(null,"Please enter a valid number");
-            }
-        });
 
-        guessAmount.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(e.getActionCommand() != null){
-                    numberValidator(e.getActionCommand());
-                    //why isn't validation working??
-                }
-                else
-                    JOptionPane.showMessageDialog(null,"Please enter a valid number");
-            }
-        });
+        //Create "Confirm" button
+        JButton confirmButton = new JButton("SET GAME");
+        confirmButton.setFont(buttonFont);
+        confirmButton.setBackground(Color.WHITE);
+        confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
 
         confirmButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
 
-                if(kidsVersion.isSelected()){
+                //improve this....
+                //validation : players must be set, validate numbers
 
-                    if(singlePlayerButton.isSelected()){
-                        if(!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
+                int numGames = numberValidator(gameAmount.getText()), numGuesses = numberValidator(guessAmount.getText());
 
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Kid's Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
-                    else if(multiPayerButton.isSelected()) {
-                        if (!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
-
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Kid's Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
+                if(kidsVersion.isSelected() && playButtonEventCount == 1){
+                    Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Kid's Version");
+                    System.out.print(newGame);
                 }
-                else if(classicVersion.isSelected()){
-                    if(singlePlayerButton.isSelected()){
-                        if(!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
-
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Classic Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
-                    else if(multiPayerButton.isSelected()) {
-                        if (!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
-
-
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Classic Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
+                else if(classicVersion.isSelected() && playButtonEventCount == 1){
+                    Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Classic Version");
+                    System.out.print(newGame);
                 }
-                else if(expertVersion.isSelected()){
-                    if(singlePlayerButton.isSelected()){
-                        if(!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
-
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Expert Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
-                    else if(multiPayerButton.isSelected()) {
-                        if (!gameAmount.getText().isEmpty() && !guessAmount.getText().isEmpty()) {
-
-                            Player playerOne = new Player(playerOneName.getText());
-                            Player playerTwo = new Player(playerTwoName.getText());
-                            Game newGame = new Game(new Player[]{playerOne, playerTwo}, Integer.parseInt(gameAmount.getText()), Integer.parseInt(guessAmount.getText()), "Expert Version");
-                            GameBoardGUI game = new GameBoardGUI(newGame);
-                        }
-                    }
+                else if(kidsVersion.isSelected() && playButtonEventCount == 1){
+                    Game newGame = new Game(new Player[]{playerOne, playerTwo}, numGames, numGuesses, "Expert Version");
+                    System.out.print(newGame);
                 }
                 else
-                    JOptionPane.showMessageDialog(null,"Please select all options", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please select Game Version and/or Set PLayer(s)",
+                            "Game Options Not Completed", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        choicePanelRight.add(playerOneLabel);
-        choicePanelRight.add(playerOneName);
-        choicePanelRight.add(playerTwoLabel);
-        choicePanelRight.add(playerTwoName);
+        //Add all components to Right Panel
+        choicePanelRight.add(kidsVersion);
+        choicePanelRight.add(classicVersion);
+        choicePanelRight.add(expertVersion);
         choicePanelRight.add(gameAmountLabel);
         choicePanelRight.add(gameAmount);
         choicePanelRight.add(guessAmountLabel);
         choicePanelRight.add(guessAmount);
+        choicePanelRight.add(confirmButton);
 
-        choicePanelLeft.setBackground(Color.LIGHT_GRAY);
-        choicePanelRight.setBackground(Color.DARK_GRAY);
-
+        //Add Left Panel and Right Panel to Main Panel
         optionsPanel.add(choicePanelLeft);
+        optionsPanel.add(Box.createVerticalStrut(10));
         optionsPanel.add(choicePanelRight);
 
+        //Add main Panel to Frame
         choiceFrame.add(optionsPanel);
 
         choiceFrame.setLocation(550, 50);
-        choiceFrame.setSize(500,400);
+        choiceFrame.setSize(700,400);
         choiceFrame.setResizable(false);
         choiceFrame.setVisible(true);
 
     }
-
     public static int numberValidator(String s) {
 
         String choice;

@@ -4,35 +4,32 @@ import java.util.Arrays;
 
 public class Game{
 
-    private Player[] player;
-    private int numberGames;
-    private int numberGuesses;
-    private String version;
+    private Player[] players;    //stores two players
+    private int numberGames;    //set from gui
+    private int numberGuesses;  //set from gui
+    private String version;     //set from gui
+    //colours
 
-    public Game() {
-        this(new Player[]{}, 0, 0, "Game Version not set");
-    }
-
-    public Game(Player[] player, int numberGames, int numberGuesses, String version) {
-        setPlayer(player);
+    public Game(Player[] players, int numberGames, int numberGuesses, String version) {
+        setPlayer(players);
         setNumberGames(numberGames);
         setNumberGuesses(numberGuesses);
         setVersion(version);
     }
 
     public Player[] getPlayer() {
-        return Arrays.copyOf(player, player.length);
+        return Arrays.copyOf(players, players.length);
     }
-    public void setPlayer(Player[] player) {
-        if(player != null) {
-            this.player = Arrays.copyOf(player, player.length);
 
-        }
+    public void setPlayer(Player[] player) {
+        if(player != null)
+            this.players = Arrays.copyOf(player, player.length);
     }
 
     public int getNumberGames() {
         return numberGames;
     }
+
     public void setNumberGames(int numberGames) {
         this.numberGames = numberGames;
     }
@@ -40,6 +37,7 @@ public class Game{
     public int getNumberGuesses() {
         return numberGuesses;
     }
+
     public void setNumberGuesses(int numberGuesses) {
         this.numberGuesses = numberGuesses;
     }
@@ -47,6 +45,7 @@ public class Game{
     public String getVersion() {
         return version;
     }
+
     public void setVersion(String version) {
         this.version = version;
     }
@@ -54,7 +53,13 @@ public class Game{
     @Override
     public String toString() {
 
-        return "Players: " + Arrays.toString(getPlayer())
-                + "\nGames Played: " + getNumberGames() + "\nGuesses Made: " + getNumberGuesses();
+        String player = "";
+
+        for(int i = 0; i < players.length; i++){
+            player += getPlayer()[i] + "";
+        }
+
+
+        return "\nPlayers: " + player + "\nNumber of Games: " + getNumberGames() + "\nNumber of Guesses: " + getNumberGuesses() + "\nVersion: " + getVersion();
     }
 }
