@@ -82,7 +82,7 @@ public class Mastermind extends Game implements Serializable{
         gameOptionsPanel.add(createQuitButton());
 
         gameOptionsPanel.setFocusable(true);
-
+        //TEST CODE
         gameOptionsPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -94,7 +94,7 @@ public class Mastermind extends Game implements Serializable{
                     JPanel mainBoard = new JPanel();
                     mainBoard.setLayout(new GridLayout(1,2));
 
-                    //mainBoard.add(createGameBoard());
+                    mainBoard.add(createGameBoard());
                     //mainBoard.add(createPlayBoard());
 
                     game.add(mainBoard);
@@ -419,7 +419,6 @@ public class Mastermind extends Game implements Serializable{
         expertVersion.setForeground(Color.WHITE);
 
 
-
         //Create Guess Amount Label
         JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
         guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -536,7 +535,6 @@ public class Mastermind extends Game implements Serializable{
         confirmButton.setForeground(Color.DARK_GRAY);
         confirmButton.setBackground(Color.WHITE);
         confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
-
 
 
         //Create 'START GAME' Button
@@ -706,20 +704,50 @@ public class Mastermind extends Game implements Serializable{
         }
         return num;
     }
+
     //CREATE GAME BOARD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //CONTINUE FROM HERE
     //create board and finish game
 
-   /*private static JPanel createGameBoard(){
+   private static JPanel createGameBoard(){
 
-        //Create LEFT PANEL - GUESSES
+        //CREATE GAME BOARD PANEL
+       JPanel gameBoard = new JPanel(new GridLayout(1, 2));
 
-        //
+       //Create LEFT PANEL - GUESSES
+       JPanel panelLeft = new JPanel(new GridLayout(12, 1));
+       panelLeft.setBackground(Color.CYAN);
 
-        //Create LEFT PANEL - GAMES
+       //SOLUTION PANEL - BLANK DURING GAMEPLAY
+       JPanel solutionPanel = new JPanel();     //layout manager - contains 4 buttons
 
-        return;
-    }*/
+       //ADD SOLUTION CODE WHEN GAME OVER
+       solutionPanel.add(new JLabel("MASTERMIND"));
+       solutionPanel.setBackground(Color.RED);
+
+       //ADD SOLUTION PANEL TO LEFT PANEL
+       panelLeft.add(solutionPanel);
+
+        //METHOD TO CREATE GUESS PANELS - depends on getNumberGuesses() - CHANGE NUMBERS, TESTING
+       //REFRESH EACH ROUND
+       for(int i = 0; i < 6; i++){
+           panelLeft.add(createGuessPanels());
+       }
+
+       //rest blank 'placeholder' - CHANGE NUMBERS, TESTING
+       for(int i = 0; i < 10-6; i++){
+           panelLeft.add(new JPanel());
+       }
+
+        //Create RIGHT PANEL - HINT
+       JPanel panelRight = new JPanel(new GridLayout(12, 1));
+       panelRight.setBackground(Color.BLUE);
+
+       gameBoard.add(panelLeft);
+       gameBoard.add(panelRight);
+
+        return gameBoard;
+    }
 
     /*private static JPanel createPlayBoard(){
 
@@ -832,8 +860,18 @@ public class Mastermind extends Game implements Serializable{
         return s;
     }
 
+    public static JPanel createGuessPanels(){
+
+        JPanel guessPanel = new JPanel(new GridLayout(1,4));
+        JButton[] guessColours = new JButton[4];
+
+        for(int i = 0; i < guessColours.length; i++){
+            guessColours[i] = new JButton(" ");
+            guessColours[i].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,2));
+            guessPanel.add(guessColours[i]);
+        }
+
+        return guessPanel;
+    }
+
 }
-
-
-
-
