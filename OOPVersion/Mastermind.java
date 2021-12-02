@@ -7,6 +7,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A class that defines a game of Mastermind
+ * @author Deirdre Lee
+ * */
 public class Mastermind extends Game implements Serializable{
 
     private static int playButtonEventCount;
@@ -19,51 +23,74 @@ public class Mastermind extends Game implements Serializable{
     private static int chooseButtonEventCount;
     private static Color[] codeHuman;
     private static Color[] solutionCode;
-    private static int gamesPlayed;
-    private static int numGuessesMade;
 
+
+    /**
+     * Mastermind 4 argument constructo. Calls 4 mutators from the super class Game
+     * @param players the two game players
+     * @param numberGames the number of games set by the human player
+     * @param numberGuesses the number of guesses set by the human player
+     * @param version the game version chosen by the human player
+     * */
     public Mastermind(Player[] players, int numberGames, int numberGuesses, String version) {
         super(players, numberGames, numberGuesses, version);
     }
 
+    /**
+     * method to count how many times the set player button was pressed to ensure that the players names were set
+     * @return int value specifying count
+     * */
     public static int getPlayButtonEventCount() {
         return playButtonEventCount;
     }
-    public void setPlayButtonEventCount(int playButtonEventCount) {
-        Mastermind.playButtonEventCount = playButtonEventCount;
-    }
 
+    /**
+     * method to count how many times the Guess button was pressed to ensure game can be played
+     * @return int value specifying count
+     * */
     public static int getGuessButtonEventCount() {
         return guessButtonEventCount;
     }
+
+    /**
+     * method to set how many times the Guess button was pressed to ensure game can be played
+     * @param guessButtonEventCount the number times the guess button is pressed
+     * */
     public static void setGuessButtonEventCount(int guessButtonEventCount) {
         Mastermind.guessButtonEventCount = guessButtonEventCount;
     }
 
-    public static boolean isGuessButtonSet() {
-        return guessButtonSet;
-    }
+    /**
+     * method to set the Guess Button to true (pressed) or false (not pressed)
+     * @param guessButtonSet whether the Guess Button has been set or not
+     * */
     public static void setGuessButtonSet(boolean guessButtonSet) {
         Mastermind.guessButtonSet = guessButtonSet;
     }
 
-    public static boolean isGameButtonSet() {
-        return gameButtonSet;
-    }
+    /**
+     * method to set the Game Button to true (pressed) or false (not pressed)
+     * @param gameButtonSet whether the Game Button has been set or not
+     * */
     public static void setGameButtonSet(boolean gameButtonSet) {
         Mastermind.gameButtonSet = gameButtonSet;
     }
 
+    /**
+     * method to get the colours that cane be used in the game
+     * @return Array list of colours that can be used in the game
+     * */
     public static ArrayList<Color> getPegColourList() {
         return pegColourList;
     }
-    public static void setPegColourList(ArrayList<Color> pegColourList) {
-        Mastermind.pegColourList = pegColourList;
-    }
 
+    /**
+     * The main method where the pegColourList is initialised. This is also where the first GUI is created using
+     * four methods (createStartButton(), createLoadButton(), createViewLeaderboardButton(), createQuitButton())
+     * There are also Key Listeners connected to the four buttons
+     * */
     public static void main(String[] args) {
 
-        //GAME COLOURS
         pegColourList = new ArrayList<>();
         pegColourList.add(Color.WHITE);
         pegColourList.add(Color.YELLOW);
@@ -74,49 +101,87 @@ public class Mastermind extends Game implements Serializable{
         pegColourList.add(Color.CYAN);
         pegColourList.add(Color.ORANGE);
 
-        //FIRST GUI - New game, Load game, View Leaderboard, Quit (keyboardListeners and mouseListeners)
         JFrame game = new JFrame("MASTERMIND");
 
         JPanel gameOptionsPanel = new JPanel(new GridLayout(4, 1));
         game.add(gameOptionsPanel);
 
-        //Create Buttons
         gameOptionsPanel.add(createStartButton());
         gameOptionsPanel.add(createLoadButton());
         gameOptionsPanel.add(createViewLeaderboardButton());
         gameOptionsPanel.add(createQuitButton());
 
         gameOptionsPanel.setFocusable(true);
-        //TEST CODE
+
         gameOptionsPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_S){
-
-                    //TEST CODE
-                    JFrame game = new JFrame("Mastermind");
-
-                    JPanel mainBoard = new JPanel();
-                    mainBoard.setLayout(new GridLayout(1,2));
-
-                    mainBoard.add(createGameBoard());
-                    mainBoard.add(createPlayBoard());
-
-                    game.add(mainBoard);
-
-                    game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    game.setLocation(550, 50);
-                    game.setSize(500,600);
-                    game.setResizable(false);
-                    game.setVisible(true);
+                    chooseGameOptions();
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_L){
                     JOptionPane.showMessageDialog(null, "Load Saved game");
-                    //Load last game state with serialisation - add save game button/key listener
+
+                    File savedGameFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/savedGameFile.data");
+
+                    try {
+                        FileInputStream inputStream = new FileInputStream(savedGameFile);
+
+                        ObjectInputStream gameInputStream = new ObjectInputStream(inputStream);
+
+                        newGame = (JFrame) gameInputStream.readObject();
+
+                        newGame.setVisible(true);
+
+                        gameInputStream.close();
+
+                    } catch (FileNotFoundException ex) {
+
+                        JOptionPane.showMessageDialog(null, "No Files Found",
+                                "File Not Found", JOptionPane.ERROR_MESSAGE);
+
+                    } catch (IOException ioException) {
+
+                        JOptionPane.showMessageDialog(null, "Error with file",
+                                "File Error", JOptionPane.ERROR_MESSAGE);
+
+                    } catch (ClassNotFoundException classNotFoundException) {
+
+                        JOptionPane.showMessageDialog(null, "Class not found",
+                                "File Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_V){
                     JOptionPane.showMessageDialog(null, "Load Leaderboard");
-                    //load
+
+                    File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/leaderboard.data");
+
+                    try {
+                        FileInputStream inputStream = new FileInputStream(leaderboardFile);
+
+                        ObjectInputStream leaderOutputStream = new ObjectInputStream(inputStream);
+
+                        Leaderboard leaderboard = (Leaderboard) leaderOutputStream.readObject();
+
+                        JOptionPane.showMessageDialog(null, leaderboard, "LEADERBOARD", JOptionPane.INFORMATION_MESSAGE);
+
+                        leaderOutputStream.close();
+
+                    } catch (FileNotFoundException ex) {
+
+                        JOptionPane.showMessageDialog(null, "No Files Found",
+                                "File Not Found", JOptionPane.ERROR_MESSAGE);
+
+                    } catch (IOException ioException) {
+
+                        JOptionPane.showMessageDialog(null, "Error with file",
+                                "File Error", JOptionPane.ERROR_MESSAGE);
+
+                    } catch (ClassNotFoundException classNotFoundException) {
+
+                        JOptionPane.showMessageDialog(null, "Class not found",
+                                "File Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else if(e.getKeyCode() == KeyEvent.VK_Q){
                     int quit = JOptionPane.showConfirmDialog(null, "Are you sure you ant to quit?",
@@ -135,9 +200,10 @@ public class Mastermind extends Game implements Serializable{
         game.setVisible(true);
     }
 
-
-
-    //----------------START OPTIONS CREATE BUTTONS-----------------
+    /**
+     * The method to create the 'START GAME' button.
+     * @return A JButton that has a mouse listener connected which calls the chooseGameOptions() method
+     * */
     private static JButton createStartButton(){
 
         JButton startButton = new JButton("[S]TART NEW GAME");
@@ -156,7 +222,13 @@ public class Mastermind extends Game implements Serializable{
         return startButton;
     }
 
-    //CREATE LOAD BUTTON - Open Saved file : If doesn't exist 'Error'
+    /**
+     * The method to create the 'LOAD GAME' button.
+     * @return A JButton that has a mouse listener connected which calls the File method to load the last saved game.
+     * @throws FileNotFoundException if no file found
+     * @throws IOException if there is an error
+     * @throws ClassNotFoundException if there is no class associated
+     * */
     private static JButton createLoadButton(){
 
         JButton loadButton = new JButton("[L]OAD GAME");
@@ -204,7 +276,13 @@ public class Mastermind extends Game implements Serializable{
         return loadButton;
     }
 
-    //CREATE LEADERBOARD BUTTON - JOptionPane textarea with 'table' of top players
+    /**
+     * The method to create the 'VIEW LEADERBOARD' button.
+     * @return A JButton that has a mouse listener connected which calls the File method to load the leaderboard.
+     * @throws FileNotFoundException if no file found
+     * @throws IOException if there is an error
+     * @throws ClassNotFoundException if there is no class associated
+     * */
     private static JButton createViewLeaderboardButton(){
 
         JButton viewLeaderBoardButton = new JButton("[V]IEW LEADERBOARD");
@@ -217,22 +295,18 @@ public class Mastermind extends Game implements Serializable{
             @Override
             public void mousePressed(MouseEvent e) {
 
-                //open saved leaderboard files - serialisation
-                //Leaderboard newLeaderboard = new Leaderboard(new Player[]{playerOne,playerTwo});
-
-                File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/leaderboardfile.data");
+                File leaderboardFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/leaderboard.data");
 
                 try {
-                    FileInputStream inStream = new FileInputStream(leaderboardFile);
+                    FileInputStream inputStream = new FileInputStream(leaderboardFile);
 
-                    int fileSize = (int)leaderboardFile.length();
-                    byte[] leaderboardArray = new byte[fileSize];
+                    ObjectInputStream leaderOutputStream = new ObjectInputStream(inputStream);
 
-                    inStream.read(leaderboardArray);
+                    Leaderboard leaderboard = (Leaderboard) leaderOutputStream.readObject();
 
-                    //String and add to textArea and display
+                    JOptionPane.showMessageDialog(null, leaderboard, "LEADERBOARD", JOptionPane.INFORMATION_MESSAGE);
 
-                    inStream.close();
+                    leaderOutputStream.close();
 
                 } catch (FileNotFoundException ex) {
 
@@ -240,7 +314,13 @@ public class Mastermind extends Game implements Serializable{
                             "File Not Found", JOptionPane.ERROR_MESSAGE);
 
                 } catch (IOException ioException) {
+
                     JOptionPane.showMessageDialog(null, "Error with file",
+                            "File Error", JOptionPane.ERROR_MESSAGE);
+
+                } catch (ClassNotFoundException classNotFoundException) {
+
+                    JOptionPane.showMessageDialog(null, "Class not found",
                             "File Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -249,7 +329,10 @@ public class Mastermind extends Game implements Serializable{
         return viewLeaderBoardButton;
     }
 
-    //CREATE QUIT BUTTON
+    /**
+     * The method to create the 'QUIT' button.
+     * @return A JButton that has a mouse listener connected which exits the game if confirmed by the user.
+     * */
     private static JButton createQuitButton(){
 
         JButton quitButton = new JButton("[Q]UIT");
@@ -273,68 +356,62 @@ public class Mastermind extends Game implements Serializable{
     }
 
 
-
-    //--------------PLAYER & GAME OPTIONS---------------------
+    /**
+     * The method to create the Player and Game options GUI. Here the amount of players, player names, game type (kids,
+     * classic or expert), max number of guesses and max number of games are set. There are itemListeners connected to each radio button
+     * to determine game type and player amount.
+     * There is a button to confirm player amount, a button to confirm Number of Games,a button to confirm Number of Guesses
+     * and finally a button to confirm all the choices made
+     * */
     private static void chooseGameOptions(){
 
-        //Create Frame
         JFrame choiceFrame = new JFrame();
 
-        //Create Panel
         JPanel optionsPanel = new JPanel(new GridLayout(1,3));
         optionsPanel.setBackground(Color.DARK_GRAY);
 
-        //Create font for buttons
         Font buttonFont = new Font("Monospaced", Font.PLAIN, 18);
 
-        //Create Left Panel
         JPanel choicePanelLeft = new JPanel(new GridLayout(10, 1));
         choicePanelLeft.setBackground(Color.DARK_GRAY);
 
-        //Create Right Panel
         JPanel choicePanelRight = new JPanel(new GridLayout(10,1));
         choicePanelRight.setBackground(Color.DARK_GRAY);
 
 
-        //-----PLAYER OPTIONS - LEFT PANEL--------------------------
-
-        //Create single player radio button
         JRadioButton singlePlayerButton = new JRadioButton("SINGLE PLAYER");
         singlePlayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
         singlePlayerButton.setBackground(Color.DARK_GRAY);
         singlePlayerButton.setForeground(Color.WHITE);
         singlePlayerButton.setSelected(true);
 
-        //Create multi player radio button
+
         JRadioButton multiPayerButton = new JRadioButton("MULTIPLAYER");
         multiPayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
         multiPayerButton.setBackground(Color.DARK_GRAY);
         multiPayerButton.setForeground(Color.WHITE);
 
-        //Create Player One Label
+
         JLabel playerOneLabel = new JLabel("Enter Player One:");
         playerOneLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         playerOneLabel.setBackground(Color.BLUE);
         playerOneLabel.setForeground(Color.WHITE);
 
-        //Create Player One Text Box
         JTextField playerOneName = new JTextField();
         playerOneName.setBackground(Color.LIGHT_GRAY);
         playerOneName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
 
-        //Create Player Two Label
+
         JLabel playerTwoLabel = new JLabel("Enter Player Two:");
         playerTwoLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         playerTwoLabel.setBackground(Color.BLUE);
         playerTwoLabel.setForeground(Color.WHITE);
 
-        //Create Player Two Text Box
         JTextField playerTwoName = new JTextField("Computer");
         playerTwoName.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         playerTwoName.setBackground(Color.GRAY);
         playerTwoName.setEditable(false);
 
-        //Single Player item listener
         singlePlayerButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -349,7 +426,6 @@ public class Mastermind extends Game implements Serializable{
             }
         });
 
-        //Multi Player item listener
         multiPayerButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -364,14 +440,14 @@ public class Mastermind extends Game implements Serializable{
             }
         });
 
-        //Create Confirm player options
+
         JButton confirmPlayerButton = new JButton("ADD PLAYER");
         confirmPlayerButton.setFont(new Font("Monospaced", Font.PLAIN, 14));
         confirmPlayerButton.setBackground(Color.WHITE);
         confirmPlayerButton.setForeground(Color.DARK_GRAY);
         confirmPlayerButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
 
-        //Confirm player options mouse listener
+
         confirmPlayerButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -398,7 +474,6 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
-        //add all components to Left Panel
         choicePanelLeft.add(singlePlayerButton);
         choicePanelLeft.add(multiPayerButton);
         choicePanelLeft.add(Box.createHorizontalStrut(10));  //only need size if use other layout manager
@@ -409,39 +484,34 @@ public class Mastermind extends Game implements Serializable{
         choicePanelLeft.add(confirmPlayerButton);
 
 
-        //-----GAME VERSION OPTIONS - RIGHT PANEL---------------------
-
-        //Create kids version radio button
         JRadioButton kidsVersion = new JRadioButton("KIDS");
         kidsVersion.setFont(buttonFont);
         kidsVersion.setBackground(Color.DARK_GRAY);
         kidsVersion.setForeground(Color.WHITE);
 
-        //Create classic version radio button
         JRadioButton classicVersion = new JRadioButton("CLASSIC");
         classicVersion.setFont(buttonFont);
         classicVersion.setBackground(Color.DARK_GRAY);
         classicVersion.setForeground(Color.WHITE);
 
-        //Create expert version radio button
         JRadioButton expertVersion = new JRadioButton("EXPERT");
         expertVersion.setFont(buttonFont);
         expertVersion.setBackground(Color.DARK_GRAY);
         expertVersion.setForeground(Color.WHITE);
 
 
-        //Create Guess Amount Label
+
         JLabel guessAmountLabel = new JLabel("Enter amount of Guesses (max 10):");
         guessAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         guessAmountLabel.setForeground(Color.WHITE);
         guessAmountLabel.setBackground(Color.DARK_GRAY);
 
-        //Create Guess Amount Text Box
+
         JTextField guessAmount = new JTextField();
         guessAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         guessAmount.setBackground(Color.LIGHT_GRAY);
 
-        //Create Guess Amount Confirm Button
+
         JButton addGuessAmountButton = new JButton("Confirm Number of Games");
         addGuessAmountButton.setFont(new Font("Monospaced", Font.BOLD, 14));
         addGuessAmountButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
@@ -467,17 +537,17 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
-        //Create Game Amount Label
+
         JLabel gameAmountLabel = new JLabel("Enter amount of Games (max 10):");
         gameAmountLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         gameAmountLabel.setForeground(Color.WHITE);
 
-        //Create Game Amount Text Box
+
         JTextField gameAmount = new JTextField();
         gameAmount.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         gameAmount.setBackground(Color.LIGHT_GRAY);
 
-        //Create Game Amount Confirm Button
+
         JButton addGameAmountButton = new JButton("Confirm Number of Games");
         addGameAmountButton.setFont(new Font("Monospaced", Font.BOLD, 14));
         addGameAmountButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10, Color.DARK_GRAY));
@@ -503,7 +573,7 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
-        //GAME VERSION RADIO BUTTON LISTENERS
+
         kidsVersion.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -540,7 +610,6 @@ public class Mastermind extends Game implements Serializable{
         });
 
 
-        //Create "SET RULES" button
         JButton confirmButton = new JButton("SET RULES");
         confirmButton.setFont(buttonFont);
         confirmButton.setForeground(Color.DARK_GRAY);
@@ -548,7 +617,6 @@ public class Mastermind extends Game implements Serializable{
         confirmButton.setBorder(BorderFactory.createMatteBorder(10,10,10,10,Color.DARK_GRAY));
 
 
-        //Create 'START GAME' Button
         JButton playGame = new JButton("START GAME");
         playGame.setFont(buttonFont);
         playGame.setForeground(Color.DARK_GRAY);
@@ -574,20 +642,12 @@ public class Mastermind extends Game implements Serializable{
 
                         if (kidsVersion.isSelected()) {
                             Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Kid's Version");
-
-                            //test code - REMOVE
-                            System.out.print(newGame);
-
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
                         }
                         else if (classicVersion.isSelected()) {
 
                             Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Classic Version");
-
-                            //test code - REMOVE
-                            System.out.print(newGame);
-
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
 
@@ -595,10 +655,6 @@ public class Mastermind extends Game implements Serializable{
                         else if (kidsVersion.isSelected()) {
 
                             Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Expert Version");
-
-                            //test code - REMOVE
-                            System.out.print(newGame);
-
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
                         }
@@ -629,7 +685,6 @@ public class Mastermind extends Game implements Serializable{
             }
         });
 
-        //Add all components to Right Panel
         choicePanelRight.add(kidsVersion);
         choicePanelRight.add(classicVersion);
         choicePanelRight.add(expertVersion);
@@ -642,12 +697,10 @@ public class Mastermind extends Game implements Serializable{
         choicePanelRight.add(confirmButton);
 
 
-        //Add Left Panel and Right Panel to Main Panel
         optionsPanel.add(choicePanelLeft);
         optionsPanel.add(playGame);
         optionsPanel.add(choicePanelRight);
 
-        //Add main Panel to Frame
         choiceFrame.add(optionsPanel);
 
         choiceFrame.setLocation(550, 50);
@@ -657,51 +710,46 @@ public class Mastermind extends Game implements Serializable{
 
     }
 
-    //CREATE GAME BOARD
+    /**
+     * The method to create the left side of the game board where the guess and hints buttons are located.
+     * There is also a solution panel where the solution will be displayed at the end of the game or when the game is won.
+     * @return A JPanel that makes the left side of the game board
+     * */
    private static JPanel createGameBoard(){
 
-        //CREATE GAME BOARD PANEL
+       int maxGuesses = 10;
+
        JPanel gameBoard = new JPanel(new GridLayout(1, 2));
 
-       //Create LEFT PANEL - GUESSES
        JPanel panelLeft = new JPanel(new GridLayout(12, 1));
        panelLeft.setBackground(Color.CYAN);
 
-       //SOLUTION PANEL - BLANK DURING GAMEPLAY
-       JPanel solutionPanel = new JPanel();     //layout manager - contains 4 buttons
+       JPanel solutionPanel = new JPanel();
 
-       //ADD SOLUTION CODE WHEN GAME OVER
        solutionPanel.add(new JLabel(getNumberGuesses() + " attempts left!"));
        solutionPanel.setBackground(Color.CYAN);
 
-       //ADD SOLUTION PANEL TO LEFT PANEL
        panelLeft.add(solutionPanel);
 
 
-        //METHOD TO CREATE GUESS PANELS - depends on getNumberGuesses() - CHANGE NUMBERS, TESTING
-       //REFRESH EACH ROUND
-       for(int i = 0; i < 6; i++){
+       for(int i = 0; i < getNumberGuesses(); i++){
            panelLeft.add(createGuessPanels());
        }
 
-       //rest blank 'placeholder' - CHANGE NUMBERS, TESTING
-       for(int i = 0; i < 10-6; i++){
+       for(int i = 0; i < maxGuesses-getNumberGuesses(); i++){
            panelLeft.add(new JPanel());
        }
 
-        //Create RIGHT PANEL - HINT
        JPanel panelRight = new JPanel(new GridLayout(12, 1));
        panelRight.setBackground(Color.CYAN);
 
-       //PLACEHOLDER LABEL
        panelRight.add(new JLabel());
 
-       //METHOD TO CREATE HINT PANELS
-       for(int i = 0; i < 6; i++){
+       for(int i = 0; i < getNumberGuesses(); i++){
            panelRight.add(createHintsPanels());
        }
-       //rest blank 'placeholder' - CHANGE NUMBERS, TESTING
-       for(int i = 0; i < 10-6; i++){
+
+       for(int i = 0; i < maxGuesses-getNumberGuesses(); i++){
            panelRight.add(new JPanel());
        }
 
@@ -711,15 +759,16 @@ public class Mastermind extends Game implements Serializable{
         return gameBoard;
     }
 
-    //CREATE PLAYING BOARD
+    /**
+     * The method to create the right side of the game board where the game colour options, guess panel and submit guess button are located.
+     * There is also a save button with a mouseListener to save the current state of the game.
+     * @return A JPanel that makes the right side of the game board
+     * */
     private static JPanel createPlayBoard(){
 
-        //CREATE PLAY BOARD PANEL
         JPanel playPanel = new JPanel(new GridLayout(5, 1));
         playPanel.setBackground(Color.GRAY);
 
-
-        //CREATE SAVE BUTTON
         JButton saveButton = new JButton("SAVE GAME");
         saveButton.setBackground(Color.WHITE);
         saveButton.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.GRAY));
@@ -728,7 +777,7 @@ public class Mastermind extends Game implements Serializable{
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                //SAVE GAME STATE
+
                 File saveGameFile = new File("C:/Users/College Girl/IdeaProjects/miniproject/savedGameFile.data");
 
                 try {
@@ -756,8 +805,6 @@ public class Mastermind extends Game implements Serializable{
             }
         });
 
-
-        //CREATE GUESS PANEL
         JPanel guessPanel = new JPanel(new GridBagLayout());
         guessPanel.setBackground(Color.GRAY);
         JButton[] guessButtons = new JButton[4];
@@ -781,11 +828,9 @@ public class Mastermind extends Game implements Serializable{
         }
 
 
-        //CREATE COLOUR PANEL - Chosen colours add to guess panel
         JPanel colourButtonPanel = new JPanel(new GridLayout(4, 2));
         colourButtonPanel.setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.WHITE));
 
-        //CREATE COLOUR BUTTONS
         JButton[] colourButtons = new JButton[8];
 
         for(int i = 0; i < getPegColourList().size(); i++){
@@ -812,16 +857,12 @@ public class Mastermind extends Game implements Serializable{
             colourButtonPanel.add(colourButtons[i]);
         }
 
-        //ADD COLOUR BUTTON PANEL TO MAIN PANEL
         playPanel.add(colourButtonPanel);
 
-        //ADD BLANK PLACEHOLDER
         playPanel.add(new JLabel());
 
-        //ADD GUESS BUTTON PANEL TO MAIN PANEL
         playPanel.add(guessPanel);
 
-        //ADD BUTTON TO ADD GUESS TO GAME PANEL
         JButton makeGuess = new JButton("Make Guess");
         makeGuess.setBackground(Color.WHITE);
         makeGuess.setFont(GAME_FONT);
@@ -833,52 +874,43 @@ public class Mastermind extends Game implements Serializable{
             @Override
             public void mousePressed(MouseEvent e) {
 
+                String codeMaker = getPlayer()[1].getPlayer(), codeBreaker = getPlayer()[0].getPlayer();
+
                 if(getNumberGuesses() != 0){
 
-                    if(guessButtonEventCount == 4){      //guess event must be correct
+                    if(guessButtonEventCount == 4){
                         JOptionPane.showMessageDialog(null, "Guess made");
 
-                        //add guessPanel to first panel on left
-
-                        //COMPARE CODE AND SET HINTS
-                        if(getPlayer()[1].getPlayer().equals("Computer")) {
-                            Color[] hints = compareCode(guessColors, codeHuman);
-                            JOptionPane.showMessageDialog(null, hints);
-                        }
-                        else {
+                        if(codeBreaker.equals("Computer")) {
                             Color[] hints = compareCode(guessColors, solutionCode);
                             JOptionPane.showMessageDialog(null, hints);
                         }
-
-                        //set hint buttons on hint panel with 'hints'
-                        //check if won - if won set guesses to -1 and games = -1
+                        else {
+                            Color[] hints = compareCode(guessColors, codeHuman);
+                            JOptionPane.showMessageDialog(null, hints);
+                        }
 
                         setNumberGuesses(getNumberGuesses()-1);
-
-                        numGuessesMade++;
                     }
                     else
                         JOptionPane.showMessageDialog(null, "You have not completed your guess",
                                 "Error", JOptionPane.ERROR_MESSAGE);
-
                 }
                 else {
-                    if(getNumberGuesses() == -1 && gamesPlayed == getNumberGames())
-                        JOptionPane.showMessageDialog(null, "No more guesses left", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No more guesses left", "GAME OVER", JOptionPane.WARNING_MESSAGE);
                 }
-
             }
         });
 
         playPanel.add(makeGuess);
-        gamesPlayed++;
 
         return playPanel;
     }
 
-
-
-    //CREATE GUESS PANEL
+    /**
+     * The method to create the guess panels on the left side of the board game. This method will be called after each game to 'reset' the guess buttons
+     * @return A JPanel that has four grey buttons
+     * */
     private static JPanel createGuessPanels(){
 
         JPanel guessPanel = new JPanel(new GridLayout(1,4));
@@ -894,7 +926,10 @@ public class Mastermind extends Game implements Serializable{
         return guessPanel;
     }
 
-    //CREATE HINTS PANEL
+    /**
+     * The method to create the hint panels on the left side of the board game. This method will be called after each game to 'reset' the hint buttons
+     * @return A JPanel that has four grey buttons
+     * */
     private static JPanel createHintsPanels(){
 
         JPanel hintsPanel = new JPanel(new GridLayout(1,4));
@@ -910,10 +945,13 @@ public class Mastermind extends Game implements Serializable{
         return hintsPanel;
     }
 
-
+    /**
+     * The method where the game is 'Code Maker' adn 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
+     * chooseGameOptions() method
+     * */
     private static void playGAME(){
 
-        String codeMaker = getPlayer()[1].getPlayer(), codeBreaker = getPlayer()[0].getPlayer();
+        String codeMaker, codeBreaker;
 
         //loop games - use checker to confirm - game over decrement numGames
 
@@ -927,56 +965,52 @@ public class Mastermind extends Game implements Serializable{
                 codeBreaker = getPlayer()[0].getPlayer();
             }
 
-        if(getPlayer()[1].getPlayer().equals("Computer")) {
+        if(codeMaker.equals("Computer")) {
 
             if(Game.getVersion().equals("KIDS")){
 
                 solutionCode = createCodeComputer();
 
-                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + codeBreaker + " and " + codeMaker);
 
                 newGame = gameGUI();
 
-                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                System.out.print(Arrays.toString(solutionCode));
 
             }
             else if (Game.getVersion().equals("CLASSIC")){
 
                 solutionCode = createCodeComputer();
 
-                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + codeBreaker + " and " + codeMaker);
 
                 newGame = gameGUI();
-
-                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                System.out.print(Arrays.toString(solutionCode));
             }
             else{
 
+                getPegColourList().add(Color.CYAN);
+
                 solutionCode = createCodeComputer();
 
-                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + codeBreaker + " and " + codeMaker);
 
                 newGame = gameGUI();
-
-                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                System.out.print(Arrays.toString(solutionCode));
             }
 
         }
         else {
             if(Game.getVersion().equals("KIDS")){
 
-                //TEST CODE
-                System.out.print("multiplayer");
-
                 //CREATE CODE GUI
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
 
-                //TEST against codeHuman
+                Color[] hints = compareCode(codeHuman, codeHuman);
+
+                if(checkWin(hints)){
+                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
+                    //number of wins++
+                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -986,13 +1020,18 @@ public class Mastermind extends Game implements Serializable{
 
             }
             else if(Game.getVersion().equals("CLASSIC")){
-                    //TEST CODE
-                System.out.print("multiplayer");
 
                     //GUI TO CREATE CODE
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
+
+                Color[] hints = compareCode(codeHuman, codeHuman);
+
+                if(checkWin(hints)){
+                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
+                    //number of wins++
+                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -1001,13 +1040,17 @@ public class Mastermind extends Game implements Serializable{
                 createCode.setVisible(true);
             }
             else{
-               //TEST CODE
-                System.out.print("multiplayer");
-
                 //GUI TO CREATE CODE
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
+
+                Color[] hints = compareCode(codeHuman, codeHuman);
+
+                if(checkWin(hints)){
+                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
+                    //number of wins++
+                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -1019,7 +1062,10 @@ public class Mastermind extends Game implements Serializable{
         }
     }
 
-
+    /**
+     * The method where the game is 'Code Maker' adn 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
+     * chooseGameOptions() method
+     * */
     private static JFrame gameGUI(){
 
         JFrame game = new JFrame("Mastermind");
@@ -1041,8 +1087,10 @@ public class Mastermind extends Game implements Serializable{
         return game;
     }
 
-
-    //CREATE CODE FOR COMPUTER - EDIT DEPENDING ON VERSION
+    /**
+     * The method where 'code' is created ny the CPU Player
+     * @return Color array that represents the solution created by the CPU Player
+     * */
     private static Color[] createCodeComputer() {
 
         int num;
@@ -1057,26 +1105,32 @@ public class Mastermind extends Game implements Serializable{
         return s;
     }
 
-    //CREATE HUMAN CODE - EDIT DEPENDING ON VERSION
+    /**
+     * The method where the 'code' is created by the Human Player
+     * @return Color array that represents the solution created by the Human Player
+     * */
     private static Color[] createCodeHuman(JButton[] codeColorButtons){
 
         Color[] codeColours = new Color[4];
 
         for(int i = 0; i < codeColorButtons.length; i++){
-
-            if(codeColorButtons[i].getBackground().equals(getPegColourList().get(i))){
-                codeColours[i] = getPegColourList().get(i);
+            for(int j = 0; j < getPegColourList().size(); j++){
+                if(codeColorButtons[i].getBackground().equals(getPegColourList().get(i))){
+                    codeColours[i] = getPegColourList().get(i);
+                }
             }
         }
         return codeColours;
     }
 
-    //CREATE CODE PICKER GUI
+    /**
+     * The method that creates the GUI where the Human Player can choose the colours they want to set as the 'code'
+     * @return JPanel that has the colours available to choose and a button to set those colours as the solution
+     * */
     private static JPanel createCodePicker(){
 
         JPanel code = new JPanel(new GridLayout(3,1));
 
-        //bottom code panel
         JPanel codePanel = new JPanel(new GridBagLayout());
         codePanel.setBackground(Color.GRAY);
 
@@ -1099,7 +1153,6 @@ public class Mastermind extends Game implements Serializable{
             codePanel.add(codeColorButtons[i]);
         }
 
-        //top color panel
         JPanel colourPicker = new JPanel(new GridLayout(2,4));
 
         JButton[] colourPickerButton = new JButton[8];
@@ -1158,7 +1211,10 @@ public class Mastermind extends Game implements Serializable{
 
     }
 
-    //VALIDATION METHODS
+    /**
+     * The method checks the input for the 'Number of Games' and 'Number of Guesses' text field is a number between 1 and 10
+     * @return an int between 1 and 10 that is used to set the text field to the updated and correct number
+     * */
     private static int numberValidator(String s) {
 
         int num = 0;
@@ -1187,6 +1243,10 @@ public class Mastermind extends Game implements Serializable{
         return num;
     }
 
+    /**
+     * The method compares the solution code and the guess code to appropriately set the hint 'pegs'
+     * @return a Color array that is used to set the hint 'pegs' to the correct colours dependent on the game version
+     * */
     private static Color[] compareCode(Color[] g, Color[] s) {
 
         Color [] h = {Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY};
@@ -1222,6 +1282,21 @@ public class Mastermind extends Game implements Serializable{
         }
 
         return h;
+    }
+
+    /**
+     * The method that checks if the hint 'pegs' are all set to 'RED' which indicates a win.
+     * @return a boolean which determines whether the game has been won.
+     * */
+    public static boolean checkWin(Color[] h){
+
+        int count = 0;
+
+        for (Color hint : h) {
+            if (hint == Color.RED)
+                count++;
+        }
+        return count == 4;
     }
 
 }
