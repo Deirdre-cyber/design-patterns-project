@@ -8,6 +8,7 @@ public class Leaderboard extends Player{
 
     public Leaderboard(String player, int numberWins) {
         super(player, numberWins);
+        setLeaderboard(leaderboard);
     }
 
     public Player[] getLeaderboard() {

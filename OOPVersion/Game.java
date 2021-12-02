@@ -46,7 +46,7 @@ public class Game{
     }
 
     public void setVersion(String version) {
-        this.version = version;
+        Game.version = version;
     }
 
     @Override

@@ -412,31 +412,25 @@ public class Mastermind extends Game implements Serializable{
         playerTwoName.setBackground(Color.GRAY);
         playerTwoName.setEditable(false);
 
-        singlePlayerButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
+        singlePlayerButton.addItemListener(e -> {
 
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    multiPayerButton.setSelected(false);
-                    playerTwoName.setBackground(Color.GRAY);
-                    playerTwoName.setEditable(false);
-                    playerTwoName.setText("Computer");
-                    playerOneName.requestFocus();
-                }
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                multiPayerButton.setSelected(false);
+                playerTwoName.setBackground(Color.GRAY);
+                playerTwoName.setEditable(false);
+                playerTwoName.setText("Computer");
+                playerOneName.requestFocus();
             }
         });
 
-        multiPayerButton.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
+        multiPayerButton.addItemListener(e -> {
 
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    singlePlayerButton.setSelected(false);
-                    playerTwoName.setBackground(Color.LIGHT_GRAY);
-                    playerTwoName.setEditable(true);
-                    playerTwoName.setText(null);
-                    playerOneName.requestFocus();
-                }
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                singlePlayerButton.setSelected(false);
+                playerTwoName.setBackground(Color.LIGHT_GRAY);
+                playerTwoName.setEditable(true);
+                playerTwoName.setText(null);
+                playerOneName.requestFocus();
             }
         });
 
@@ -574,38 +568,29 @@ public class Mastermind extends Game implements Serializable{
 
 
 
-        kidsVersion.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
+        kidsVersion.addItemListener(e -> {
 
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    classicVersion.setSelected(false);
-                    expertVersion.setSelected(false);
-                    gameAmount.requestFocus();
-                }
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                classicVersion.setSelected(false);
+                expertVersion.setSelected(false);
+                gameAmount.requestFocus();
             }
         });
 
-        classicVersion.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
+        classicVersion.addItemListener(e -> {
 
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    kidsVersion.setSelected(false);
-                    expertVersion.setSelected(false);
-                    gameAmount.requestFocus();
-                }
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                kidsVersion.setSelected(false);
+                expertVersion.setSelected(false);
+                gameAmount.requestFocus();
             }
         });
 
-        expertVersion.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    classicVersion.setSelected(false);
-                    kidsVersion.setSelected(false);
-                    gameAmount.requestFocus();
-                }
+        expertVersion.addItemListener(e -> {
+            if(e.getStateChange() == ItemEvent.SELECTED){
+                classicVersion.setSelected(false);
+                kidsVersion.setSelected(false);
+                gameAmount.requestFocus();
             }
         });
 
@@ -881,14 +866,15 @@ public class Mastermind extends Game implements Serializable{
                     if(guessButtonEventCount == 4){
                         JOptionPane.showMessageDialog(null, "Guess made");
 
+                        Color[] hints;
+
                         if(codeBreaker.equals("Computer")) {
-                            Color[] hints = compareCode(guessColors, solutionCode);
-                            JOptionPane.showMessageDialog(null, hints);
+                            hints = compareCode(guessColors, solutionCode);
                         }
                         else {
-                            Color[] hints = compareCode(guessColors, codeHuman);
-                            JOptionPane.showMessageDialog(null, hints);
+                            hints = compareCode(guessColors, codeHuman);
                         }
+                        JOptionPane.showMessageDialog(null, hints);
 
                         setNumberGuesses(getNumberGuesses()-1);
                     }
