@@ -16,6 +16,11 @@ public class Mastermind extends Game implements Serializable{
     private static boolean gameButtonSet = false;
     private static ArrayList<Color> pegColourList;
     private static JFrame newGame;
+    private static int chooseButtonEventCount;
+    private static Color[] codeHuman;
+    private static Color[] solutionCode;
+    private static int gamesPlayed;
+    private static int numGuessesMade;
 
     public Mastermind(Player[] players, int numberGames, int numberGuesses, String version) {
         super(players, numberGames, numberGuesses, version);
@@ -373,8 +378,8 @@ public class Mastermind extends Game implements Serializable{
 
                 if(!playerOneName.getText().equals("")){
 
-                    Player playerOne = new Player(playerOneName.getText());
-                    Player playerTwo = new Player(playerTwoName.getText());
+                    Player playerOne = new Player(playerOneName.getText(), 0);
+                    Player playerTwo = new Player(playerTwoName.getText(), 0);
 
                     setPlayer(new Player[]{playerOne, playerTwo});
 
@@ -756,6 +761,7 @@ public class Mastermind extends Game implements Serializable{
         JPanel guessPanel = new JPanel(new GridBagLayout());
         guessPanel.setBackground(Color.GRAY);
         JButton[] guessButtons = new JButton[4];
+        Color[] guessColors = new Color[4];
 
         for(int i = 0; i < guessButtons.length; i++){
 
@@ -794,6 +800,7 @@ public class Mastermind extends Game implements Serializable{
                     if(getGuessButtonEventCount() < guessButtons.length) {
                         Color color = ((JButton)e.getSource()).getBackground();
                         guessButtons[getGuessButtonEventCount()].setBackground(color);
+                        guessColors[getGuessButtonEventCount()] = color;
                     }
                     else {
                         System.out.print(getGuessButtonEventCount());
@@ -825,21 +832,46 @@ public class Mastermind extends Game implements Serializable{
         makeGuess.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(guessButtonEventCount == 4){      //guess event must be correct
-                    JOptionPane.showMessageDialog(null, "Guess made");
 
-                    //add colours to left panel
-                    //add guessPanel to first panel on left
+                if(getNumberGuesses() != 0){
 
-                    setNumberGuesses(getNumberGuesses()-1);
+                    if(guessButtonEventCount == 4){      //guess event must be correct
+                        JOptionPane.showMessageDialog(null, "Guess made");
+
+                        //add guessPanel to first panel on left
+
+                        //COMPARE CODE AND SET HINTS
+                        if(getPlayer()[1].getPlayer().equals("Computer")) {
+                            Color[] hints = compareCode(guessColors, codeHuman);
+                            JOptionPane.showMessageDialog(null, hints);
+                        }
+                        else {
+                            Color[] hints = compareCode(guessColors, solutionCode);
+                            JOptionPane.showMessageDialog(null, hints);
+                        }
+
+                        //set hint buttons on hint panel with 'hints'
+                        //check if won - if won set guesses to -1 and games = -1
+
+                        setNumberGuesses(getNumberGuesses()-1);
+
+                        numGuessesMade++;
+                    }
+                    else
+                        JOptionPane.showMessageDialog(null, "You have not completed your guess",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+
                 }
-                else
-                    JOptionPane.showMessageDialog(null, "You have not completed your guess",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                else {
+                    if(getNumberGuesses() == -1 && gamesPlayed == getNumberGames())
+                        JOptionPane.showMessageDialog(null, "No more guesses left", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+                }
+
             }
         });
 
         playPanel.add(makeGuess);
+        gamesPlayed++;
 
         return playPanel;
     }
@@ -847,7 +879,7 @@ public class Mastermind extends Game implements Serializable{
 
 
     //CREATE GUESS PANEL
-    public static JPanel createGuessPanels(){
+    private static JPanel createGuessPanels(){
 
         JPanel guessPanel = new JPanel(new GridLayout(1,4));
         JButton[] playGuessButtons = new JButton[4];
@@ -863,7 +895,7 @@ public class Mastermind extends Game implements Serializable{
     }
 
     //CREATE HINTS PANEL
-    public static JPanel createHintsPanels(){
+    private static JPanel createHintsPanels(){
 
         JPanel hintsPanel = new JPanel(new GridLayout(1,4));
         JButton[] hintButtons = new JButton[4];
@@ -879,322 +911,116 @@ public class Mastermind extends Game implements Serializable{
     }
 
 
-    public static void playGAME(){
+    private static void playGAME(){
 
         String codeMaker = getPlayer()[1].getPlayer(), codeBreaker = getPlayer()[0].getPlayer();
 
-        //for loop = numGames
-        for(int x = 0; x < getNumberGames(); x++){
+        //loop games - use checker to confirm - game over decrement numGames
 
-            //swap players+++++++++++++++++++++++++++++++++++++++
-            if(x % 2 == 0){
+        //SWAP PLAYERS
+        if(getNumberGames() % 2 == 0){
                 codeMaker = getPlayer()[0].getPlayer();
                 codeBreaker = getPlayer()[1].getPlayer();
             }
-            else {
+        else {
                 codeMaker = getPlayer()[1].getPlayer();
                 codeBreaker = getPlayer()[0].getPlayer();
             }
 
-            if(getPlayer()[1].getPlayer().equals("Computer")) {
+        if(getPlayer()[1].getPlayer().equals("Computer")) {
 
-                if(Game.getVersion().equals("KIDS")){
+            if(Game.getVersion().equals("KIDS")){
 
-                    Color[] solutionCode = createCodeComputer();
+                solutionCode = createCodeComputer();
 
-                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
 
-                    newGame = gameGUI();
+                newGame = gameGUI();
 
-                    //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                    System.out.print(Arrays.toString(solutionCode));
-
-                }
-                else if (Game.getVersion().equals("CLASSIC")){
-
-                    Color[] solutionCode = createCodeComputer();
-
-                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
-
-                    newGame = gameGUI();
-
-                    //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                    System.out.print(Arrays.toString(solutionCode));
-                }
-                else{
-
-                    Color[] solutionCode = createCodeComputer();
-
-                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
-
-                    newGame = gameGUI();
-
-                    //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
-                    System.out.print(Arrays.toString(solutionCode));
-                }
+                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
+                System.out.print(Arrays.toString(solutionCode));
 
             }
-            else {
-                if(Game.getVersion().equals("KIDS")){
+            else if (Game.getVersion().equals("CLASSIC")){
 
-                    System.out.print("multiplayer");
+                solutionCode = createCodeComputer();
 
-                    //CREATE CODE GUI
-                    JFrame createCode = new JFrame("Please select colours " + codeMaker);
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
 
-                    JPanel code = new JPanel(new GridLayout(3,1));
+                newGame = gameGUI();
 
-                    //bottom code panel
-                    JPanel codePanel = new JPanel(new GridBagLayout());
-                    codePanel.setBackground(Color.GRAY);
+                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
+                System.out.print(Arrays.toString(solutionCode));
+            }
+            else{
 
-                    JButton[] codeColorButtons = new JButton[4];
+                solutionCode = createCodeComputer();
 
-                    for(int i = 0; i < codeColorButtons.length; i++){
+                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
 
-                        codeColorButtons[i] = new JButton("  ");
-                        codeColorButtons[i].setBackground(Color.LIGHT_GRAY);
+                newGame = gameGUI();
 
-                        codeColorButtons[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                                if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
-                                    ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
-                                }
-                            }
-                        });
-                        codePanel.add(codeColorButtons[i]);
-                    }
+                //TEST CODE - DELETE++++++++++++++++++++++++++++++++++++++
+                System.out.print(Arrays.toString(solutionCode));
+            }
 
-                    //top color panel
-                    JPanel colourPicker = new JPanel(new GridLayout(2,4));
+        }
+        else {
+            if(Game.getVersion().equals("KIDS")){
 
-                    JButton[] colourPickerButton = new JButton[8];
+                //TEST CODE
+                System.out.print("multiplayer");
 
-                    for(int i = 0; i < getPegColourList().size(); i++) {
-                        colourPickerButton[i] = new JButton();
-                        colourPickerButton[i].setBackground(getPegColourList().get(i));
-                        colourPickerButton[i].setForeground(getPegColourList().get(i));
-                        colourPickerButton[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
+                //CREATE CODE GUI
+                JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
-                        colourPickerButton[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
+                createCode.add(createCodePicker());
 
-                                //error here
-                                for(int j = 0; j < codeColorButtons.length; j++){
-                                    Color color = ((JButton)e.getSource()).getBackground();
-                                    codeColorButtons[j].setBackground(color);
-                                }
-                            }
-                        });
-                        colourPicker.add(colourPickerButton[i]);
-                    }
-                    code.add(colourPicker);
+                //TEST against codeHuman
 
-                    JButton setCode = new JButton("Set code");
-
-                    code.add(colourPicker);
-                    code.add(codePanel);
-                    code.add(setCode);
-
-                    createCode.add(code);
-
-                    setCode.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-
-                            if(codeColorButtons[0].getBackground() == Color.LIGHT_GRAY){
-                                JOptionPane.showMessageDialog(null, "Player " + getPlayer()[1].getPlayer() + " must choose code");
-                            }
-                            else {
-                                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
-                                newGame = gameGUI();
-                            }
-                        }
-                    });
-
-                    createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    createCode.setLocation(550, 50);
-                    createCode.setSize(500,600);
-                    createCode.setResizable(false);
-                    createCode.setVisible(true);
-                }
-                else if(Game.getVersion().equals("CLASSIC")){
-                    System.out.print("multiplayer");
-
-                    //GUI TO CREATE CODE+++++++++++++++++++++++++++++++++
-                    JFrame createCode = new JFrame("Please select colours " + codeMaker);
-
-                    JPanel code = new JPanel(new GridLayout(3,1));
-
-                    //bottom code panel
-                    JPanel codePanel = new JPanel(new GridBagLayout());
-                    codePanel.setBackground(Color.GRAY);
-
-                    JButton[] codeColorButtons = new JButton[4];
-
-                    for(int i = 0; i < codeColorButtons.length; i++){
-
-                        codeColorButtons[i] = new JButton("  ");
-                        codeColorButtons[i].setBackground(Color.LIGHT_GRAY);
-
-                        codeColorButtons[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                                if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
-                                    ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
-                                }
-                            }
-                        });
-                        codePanel.add(codeColorButtons[i]);
-                    }
-
-                    //top color panel
-                    JPanel colourPicker = new JPanel(new GridLayout(2,4));
-
-                    JButton[] colourPickerButton = new JButton[8];
-
-                    for(int i = 0; i < getPegColourList().size(); i++) {
-                        colourPickerButton[i] = new JButton();
-                        colourPickerButton[i].setBackground(getPegColourList().get(i));
-                        colourPickerButton[i].setForeground(getPegColourList().get(i));
-                        colourPickerButton[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
-
-                        colourPickerButton[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-
-                                //error here
-                                for(int j = 0; j < codeColorButtons.length; j++){
-                                    Color color = ((JButton)e.getSource()).getBackground();
-                                    codeColorButtons[j].setBackground(color);
-                                }
-                            }
-                        });
-                        colourPicker.add(colourPickerButton[i]);
-                    }
-                    code.add(colourPicker);
-
-                    JButton setCode = new JButton("Set code");
-
-                    code.add(colourPicker);
-                    code.add(codePanel);
-                    code.add(setCode);
-
-                    createCode.add(code);
-
-                    setCode.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-
-                            if(codeColorButtons[0].getBackground() == Color.LIGHT_GRAY){
-                                JOptionPane.showMessageDialog(null, "Player " + getPlayer()[1].getPlayer() + " must choose code");
-                            }
-                            else {
-                                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
-                                newGame = gameGUI();
-                            }
-                        }
-                    });
-
-                    createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    createCode.setLocation(550, 50);
-                    createCode.setSize(500,600);
-                    createCode.setResizable(false);
-                    createCode.setVisible(true);
-                }
-                else{
-                    System.out.print("multiplayer");
-
-                    //GUI TO CREATE CODE+++++++++++++++++++++++++++++++++
-                    JFrame createCode = new JFrame("Please select colours " + codeMaker);
-
-                    JPanel code = new JPanel(new GridLayout(3,1));
-
-                    //bottom code panel
-                    JPanel codePanel = new JPanel(new GridBagLayout());
-                    codePanel.setBackground(Color.GRAY);
-
-                    JButton[] codeColorButtons = new JButton[4];
-
-                    for(int i = 0; i < codeColorButtons.length; i++){
-
-                        codeColorButtons[i] = new JButton("  ");
-                        codeColorButtons[i].setBackground(Color.LIGHT_GRAY);
-
-                        codeColorButtons[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                                if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
-                                    ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
-                                }
-                            }
-                        });
-                        codePanel.add(codeColorButtons[i]);
-                    }
-
-                    //top color panel
-                    JPanel colourPicker = new JPanel(new GridLayout(2,4));
-
-                    JButton[] colourPickerButton = new JButton[8];
-
-                    for(int i = 0; i < getPegColourList().size(); i++) {
-                        colourPickerButton[i] = new JButton();
-                        colourPickerButton[i].setBackground(getPegColourList().get(i));
-                        colourPickerButton[i].setForeground(getPegColourList().get(i));
-                        colourPickerButton[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
-
-                        colourPickerButton[i].addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-
-                                //error here
-                                for(int j = 0; j < codeColorButtons.length; j++){
-                                    Color color = ((JButton)e.getSource()).getBackground();
-                                    codeColorButtons[j].setBackground(color);
-                                }
-                            }
-                        });
-                        colourPicker.add(colourPickerButton[i]);
-                    }
-                    code.add(colourPicker);
-
-                    JButton setCode = new JButton("Set code");
-
-                    code.add(colourPicker);
-                    code.add(codePanel);
-                    code.add(setCode);
-
-                    createCode.add(code);
-
-                    setCode.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-
-                            if(codeColorButtons[0].getBackground() == Color.LIGHT_GRAY){
-                                JOptionPane.showMessageDialog(null, "Player " + getPlayer()[1].getPlayer() + " must choose code");
-                            }
-                            else {
-                                JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
-                                newGame = gameGUI();
-                            }
-                        }
-                    });
-
-                    createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    createCode.setLocation(550, 50);
-                    createCode.setSize(500,600);
-                    createCode.setResizable(false);
-                    createCode.setVisible(true);
-                }
+                createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                createCode.setLocation(550, 50);
+                createCode.setSize(500,600);
+                createCode.setResizable(false);
+                createCode.setVisible(true);
 
             }
+            else if(Game.getVersion().equals("CLASSIC")){
+                    //TEST CODE
+                System.out.print("multiplayer");
+
+                    //GUI TO CREATE CODE
+                JFrame createCode = new JFrame("Please select colours " + codeMaker);
+
+                createCode.add(createCodePicker());
+
+                createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                createCode.setLocation(550, 50);
+                createCode.setSize(500,600);
+                createCode.setResizable(false);
+                createCode.setVisible(true);
+            }
+            else{
+               //TEST CODE
+                System.out.print("multiplayer");
+
+                //GUI TO CREATE CODE
+                JFrame createCode = new JFrame("Please select colours " + codeMaker);
+
+                createCode.add(createCodePicker());
+
+                createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                createCode.setLocation(550, 50);
+                createCode.setSize(500,600);
+                createCode.setResizable(false);
+                createCode.setVisible(true);
+            }
+
         }
     }
 
 
-    public static JFrame gameGUI(){
+    private static JFrame gameGUI(){
 
         JFrame game = new JFrame("Mastermind");
 
@@ -1217,7 +1043,7 @@ public class Mastermind extends Game implements Serializable{
 
 
     //CREATE CODE FOR COMPUTER - EDIT DEPENDING ON VERSION
-    public static Color[] createCodeComputer() {
+    private static Color[] createCodeComputer() {
 
         int num;
         Color[] s = new Color[4];
@@ -1227,12 +1053,26 @@ public class Mastermind extends Game implements Serializable{
 
             s[i] = getPegColourList().get(num);
         }
+        System.out.print(Arrays.toString(s));
         return s;
     }
 
-    public static Color[] createCodeHuman(){
+    //CREATE HUMAN CODE - EDIT DEPENDING ON VERSION
+    private static Color[] createCodeHuman(JButton[] codeColorButtons){
 
-        JFrame createCode = new JFrame("Please select colours " + getPlayer()[1].getPlayer());
+        Color[] codeColours = new Color[4];
+
+        for(int i = 0; i < codeColorButtons.length; i++){
+
+            if(codeColorButtons[i].getBackground().equals(getPegColourList().get(i))){
+                codeColours[i] = getPegColourList().get(i);
+            }
+        }
+        return codeColours;
+    }
+
+    //CREATE CODE PICKER GUI
+    private static JPanel createCodePicker(){
 
         JPanel code = new JPanel(new GridLayout(3,1));
 
@@ -1252,6 +1092,7 @@ public class Mastermind extends Game implements Serializable{
                 public void mousePressed(MouseEvent e) {
                     if(((JButton)(e.getSource())).getBackground() != Color.LIGHT_GRAY) {
                         ((JButton) (e.getSource())).setBackground(Color.LIGHT_GRAY);
+                        chooseButtonEventCount--;
                     }
                 }
             });
@@ -1273,27 +1114,52 @@ public class Mastermind extends Game implements Serializable{
                 @Override
                 public void mousePressed(MouseEvent e) {
 
-                    //error here
-                    for(int j = 0; j < codeColorButtons.length; j++){
+                    if(chooseButtonEventCount < codeColorButtons.length) {
                         Color color = ((JButton)e.getSource()).getBackground();
-                        codeColorButtons[j].setBackground(color);
+                        codeColorButtons[chooseButtonEventCount].setBackground(color);
                     }
+                    else {
+                        System.out.print(getGuessButtonEventCount());
+                        setGuessButtonEventCount(0);
+                    }
+                    chooseButtonEventCount++;
                 }
             });
             colourPicker.add(colourPickerButton[i]);
         }
         code.add(colourPicker);
 
+        JButton setCode = new JButton("SET CODE");
+        setCode.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        setCode.setBackground(Color.DARK_GRAY);
+        setCode.setForeground(Color.WHITE);
 
+        setCode.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                if(codeColorButtons[0].getBackground() == Color.LIGHT_GRAY){
+                    JOptionPane.showMessageDialog(null, "Player " + getPlayer()[1].getPlayer() + " must choose code");
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                    newGame = gameGUI();
+                }
+            }
         });
+
+        codeHuman = createCodeHuman(codeColorButtons);
+
+        code.add(colourPicker);
+        code.add(codePanel);
+        code.add(setCode);
 
         return code;
 
     }
 
-
     //VALIDATION METHODS
-    public static int numberValidator(String s) {
+    private static int numberValidator(String s) {
 
         int num = 0;
         boolean valid;
@@ -1319,6 +1185,43 @@ public class Mastermind extends Game implements Serializable{
             }
         }
         return num;
+    }
+
+    private static Color[] compareCode(Color[] g, Color[] s) {
+
+        Color [] h = {Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY};
+        int x, y;
+
+        if(getVersion().equals("KIDS")){
+
+            for (x = 0; x < g.length; x++) {
+                for (y = 0; y < s.length; y++) {
+                    if (g[x] == s[y]) {
+                        h[x] = Color.RED;
+                        s[y] = Color.GRAY;
+                        break;
+                    }
+                }
+            }
+        }
+        else{
+            for(x = 0; x < s.length; x++){
+                for(y = 0; y < g.length; y++){
+                    if(s[x] == g[y]){
+                        if(x == y){
+                            h[y] = Color.RED;
+                            g[x] = Color.GRAY;
+                            break;
+                        }
+                        else if (y == 4){
+                            h[y-1] = Color.BLACK;
+                        }
+                    }
+                }
+            }
+        }
+
+        return h;
     }
 
 }

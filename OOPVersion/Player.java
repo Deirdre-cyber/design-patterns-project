@@ -7,11 +7,12 @@ package OOPVersion;
 public class Player{
 
     private String player;
-    private static int numberWins; //number of wins per game
+    private int numberWins; //number of wins per game
 
 
-    public Player(String player) {
+    public Player(String player, int numberWins) {
         setPlayer(player);
+        setNumberWins(numberWins);
     }
 
     public String getPlayer() {
@@ -25,7 +26,7 @@ public class Player{
         return numberWins;
     }
     public void setNumberWins(int numberWins) {
-        Player.numberWins = numberWins;
+        this.numberWins = numberWins;
     }
 
     @Override

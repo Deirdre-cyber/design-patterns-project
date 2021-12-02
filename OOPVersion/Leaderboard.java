@@ -2,25 +2,31 @@ package OOPVersion;
 
 import java.util.Arrays;
 
-public class Leaderboard extends Game{
+public class Leaderboard extends Player{
 
-    private Player[] leaders;
+    private Player[] leaderboard;
 
-    public Leaderboard(Player[] players, int numberGames, int numberGuesses, String version) {
-        super(players, numberGames, numberGuesses, version);
+    public Leaderboard(String player, int numberWins) {
+        super(player, numberWins);
     }
 
-    public Player[] getLeaders() {
-        return leaders;
+    public Player[] getLeaderboard() {
+        return Arrays.copyOf(leaderboard, leaderboard.length);
     }
-    public void setLeaders(Player[] leaders) {
-        this.leaders = leaders;
+    public void setLeaderboard(Player[] leaderboard) {
+        if(leaderboard != null)
+            this.leaderboard = Arrays.copyOf(leaderboard, leaderboard.length);
     }
 
     @Override
     public String toString() {
-        return "Leaderboard{" +
-                "leaders=" + Arrays.toString(leaders) +
-                '}';
+
+        String leaderList="";
+
+        for(int i = 0; i < leaderboard.length; i++){
+            leaderList += getLeaderboard()[i] + "\n";
+        }
+
+        return "Leaderboard" + leaderList;
     }
 }
