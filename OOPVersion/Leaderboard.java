@@ -1,15 +1,13 @@
 package OOPVersion;
 
-import java.io.File;
 import java.util.Arrays;
 
-public class Leaderboard extends Mastermind{
+public class Leaderboard extends Game{
 
     private Player[] leaders;
 
-    public Leaderboard(Player[] players, int numberGames, int numberGuesses, String version, Player[] leaders) {
+    public Leaderboard(Player[] players, int numberGames, int numberGuesses, String version) {
         super(players, numberGames, numberGuesses, version);
-        setLeaders(leaders);
     }
 
     public Player[] getLeaders() {

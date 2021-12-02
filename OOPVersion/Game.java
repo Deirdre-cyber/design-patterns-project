@@ -1,15 +1,13 @@
 package OOPVersion;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Game{
 
-    private static Player[] players;    //stores two players
-    private static int numberGames;    //set from gui
-    private static int numberGuesses;  //set from gui
-    private String version;     //set from gui
+    private static Player[] players;
+    private static int numberGames;
+    private static int numberGuesses;
+    private static String version;
 
     public Game(Player[] players, int numberGames, int numberGuesses, String version) {
         setPlayer(players);
@@ -43,8 +41,8 @@ public class Game{
         Game.numberGuesses = numberGuesses;
     }
 
-    public String getVersion() {
-        return version;
+    public static String getVersion() {
+        return Game.version;
     }
 
     public void setVersion(String version) {
