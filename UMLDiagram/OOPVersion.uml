@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>OOPVersion</OriginalElement>
+  <nodes>
+    <node x="27.5" y="0.0">OOPVersion.Game</node>
+    <node x="307.0" y="217.0">OOPVersion.Leaderboard</node>
+    <node x="0.0" y="305.0">OOPVersion.Mastermind</node>
+    <node x="325.0" y="0.0">OOPVersion.Player</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="OOPVersion.Mastermind" target="OOPVersion.Game" relationship="GENERALIZATION">
+      <point x="0.0" y="-336.5" />
+      <point x="0.0" y="127.5" />
+    </edge>
+    <edge source="OOPVersion.Leaderboard" target="OOPVersion.Player" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="0.0" y="83.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.6232464929859719" showDependencies="false" x="243.0" y="489.00000000000006" />
+  <SelectedNodes>
+    <node>OOPVersion.Game</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
