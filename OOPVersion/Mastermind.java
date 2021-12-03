@@ -13,15 +13,46 @@ import java.util.Arrays;
  * */
 public class Mastermind extends Game implements Serializable{
 
+    /**
+     * An integer variable representing the amount of times the 'Set Player' button has been selected
+     * */
     private static int playButtonEventCount;
+    /**
+     * An integer variable representing the amount of times the 'Guess' button has been set
+     * */
     private static int guessButtonEventCount;
+    /**
+     * A Font variable representing font type, style and size to be used in the class
+     * */
     private static final Font GAME_FONT = new Font("Monospaced", Font.PLAIN, 22);
+    /**
+     * A boolean variable representing the state of the 'Guess' button - false = not set
+     * */
     private static boolean guessButtonSet = false;
+    /**
+     * A boolean variable representing the state of the 'Play Game' button - false = not set
+     * */
     private static boolean gameButtonSet = false;
+    /**
+     * An Array List variable representing the colours to be used for the 'pegs' in the game
+     * */
     private static ArrayList<Color> pegColourList;
+    /**
+     * A JFrame variable representing a Game object
+     * */
     private static JFrame newGame;
+    /**
+     * An integer variable representing the amount of times a colour button has been set while choosing the
+     * solution colour code by a human player
+     * */
     private static int chooseButtonEventCount;
+    /**
+     * A colour array representing the solution colour code created by a human player
+     * */
     private static Color[] codeHuman;
+    /**
+     * A colour array representing the solution colour code created by the CPU player
+     * */
     private static Color[] solutionCode;
 
 
@@ -88,6 +119,7 @@ public class Mastermind extends Game implements Serializable{
      * The main method where the pegColourList is initialised. This is also where the first GUI is created using
      * four methods (createStartButton(), createLoadButton(), createViewLeaderboardButton(), createQuitButton())
      * There are also Key Listeners connected to the four buttons
+     * @param args main String
      * */
     public static void main(String[] args) {
 
@@ -111,7 +143,7 @@ public class Mastermind extends Game implements Serializable{
         gameOptionsPanel.add(createViewLeaderboardButton());
         gameOptionsPanel.add(createQuitButton());
 
-        gameOptionsPanel.setFocusable(true);
+        gameOptionsPanel.setFocusable(true);    //Found out how get key listener to work on JPanel : https://stackoverflow.com/questions/2135223/obtaining-focus-on-a-jpanel
 
         gameOptionsPanel.addKeyListener(new KeyAdapter() {
             @Override
@@ -225,9 +257,6 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method to create the 'LOAD GAME' button.
      * @return A JButton that has a mouse listener connected which calls the File method to load the last saved game.
-     * @throws FileNotFoundException if no file found
-     * @throws IOException if there is an error
-     * @throws ClassNotFoundException if there is no class associated
      * */
     private static JButton createLoadButton(){
 
@@ -279,9 +308,6 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method to create the 'VIEW LEADERBOARD' button.
      * @return A JButton that has a mouse listener connected which calls the File method to load the leaderboard.
-     * @throws FileNotFoundException if no file found
-     * @throws IOException if there is an error
-     * @throws ClassNotFoundException if there is no class associated
      * */
     private static JButton createViewLeaderboardButton(){
 
@@ -354,7 +380,6 @@ public class Mastermind extends Game implements Serializable{
 
         return quitButton;
     }
-
 
     /**
      * The method to create the Player and Game options GUI. Here the amount of players, player names, game type (kids,
@@ -1029,6 +1054,7 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method where the game is 'Code Maker' and 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
      * chooseGameOptions() method
+     * @return JFrame with the main Game board GUI
      * */
     private static JFrame gameGUI(){
 
@@ -1072,6 +1098,7 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method where the 'code' is created by the Human Player
      * @return Color array that represents the solution created by the Human Player
+     * @param codeColorButtons Buttons representing code chosen by human player
      * */
     private static Color[] createCodeHuman(JButton[] codeColorButtons){
 
@@ -1178,6 +1205,7 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method checks the input for the 'Number of Games' and 'Number of Guesses' text field is a number between 1 and 10
      * @return an int between 1 and 10 that is used to set the text field to the updated and correct number
+     * @param s the String to be validated by the method
      * */
     private static int numberValidator(String s) {
 
@@ -1210,6 +1238,8 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method compares the solution code and the guess code to appropriately set the hint 'pegs'
      * @return a Color array that is used to set the hint 'pegs' to the correct colours dependent on the game version
+     * @param g the color array representing the guess colour code
+     * @param s the color array representing the solution colour code
      * */
     private static Color[] compareCode(Color[] g, Color[] s) {
 
@@ -1251,6 +1281,7 @@ public class Mastermind extends Game implements Serializable{
     /**
      * The method that checks if the hint 'pegs' are all set to 'RED' which indicates a win.
      * @return a boolean which determines whether the game has been won.
+     * @param h the color array representing the hint colour 'pegs'
      * */
     public static boolean checkWin(Color[] h){
 
