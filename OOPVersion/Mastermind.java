@@ -26,7 +26,7 @@ public class Mastermind extends Game implements Serializable{
 
 
     /**
-     * Mastermind 4 argument constructo. Calls 4 mutators from the super class Game
+     * Mastermind 4 argument constructor. Calls 4 mutators from the super class Game
      * @param players the two game players
      * @param numberGames the number of games set by the human player
      * @param numberGuesses the number of guesses set by the human player
@@ -470,7 +470,7 @@ public class Mastermind extends Game implements Serializable{
 
         choicePanelLeft.add(singlePlayerButton);
         choicePanelLeft.add(multiPayerButton);
-        choicePanelLeft.add(Box.createHorizontalStrut(10));  //only need size if use other layout manager
+        choicePanelLeft.add(Box.createHorizontalStrut(10));
         choicePanelLeft.add(playerOneLabel);
         choicePanelLeft.add(playerOneName);
         choicePanelLeft.add(playerTwoLabel);
@@ -937,7 +937,7 @@ public class Mastermind extends Game implements Serializable{
     }
 
     /**
-     * The method where the game is 'Code Maker' adn 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
+     * The method where the game is 'Code Maker' and 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
      * chooseGameOptions() method
      * */
     private static void playGAME(){
@@ -1027,7 +1027,7 @@ public class Mastermind extends Game implements Serializable{
     }
 
     /**
-     * The method where the game is 'Code Maker' adn 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
+     * The method where the game is 'Code Maker' and 'Code Breaker' are set. The game direction is set here, dependent on the factors chose in the
      * chooseGameOptions() method
      * */
     private static JFrame gameGUI(){
@@ -1052,7 +1052,7 @@ public class Mastermind extends Game implements Serializable{
     }
 
     /**
-     * The method where 'code' is created ny the CPU Player
+     * The method where 'code' is created by the CPU Player
      * @return Color array that represents the solution created by the CPU Player
      * */
     private static Color[] createCodeComputer() {
