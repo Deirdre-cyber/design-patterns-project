@@ -451,7 +451,7 @@ public class Mastermind extends Game implements Serializable{
                     Player playerOne = new Player(playerOneName.getText(), 0);
                     Player playerTwo = new Player(playerTwoName.getText(), 0);
 
-                    setPlayer(new Player[]{playerOne, playerTwo});
+                    setPlayers(new Player[]{playerOne, playerTwo});
 
                     //test code - REMOVE
                     System.out.print(playerOne + "" + playerTwo);
@@ -626,20 +626,20 @@ public class Mastermind extends Game implements Serializable{
                     if(gameButtonSet && guessButtonSet){
 
                         if (kidsVersion.isSelected()) {
-                            Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Kid's Version");
+                            Game newGame = new Game(getPlayers(), getNumberGames(), getNumberGuesses(), "Kid's Version");
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
                         }
                         else if (classicVersion.isSelected()) {
 
-                            Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Classic Version");
+                            Game newGame = new Game(getPlayers(), getNumberGames(), getNumberGuesses(), "Classic Version");
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
 
                         }
                         else if (kidsVersion.isSelected()) {
 
-                            Game newGame = new Game(getPlayer(), getNumberGames(), getNumberGuesses(), "Expert Version");
+                            Game newGame = new Game(getPlayers(), getNumberGames(), getNumberGuesses(), "Expert Version");
                             confirmButton.setVisible(false);
                             playGame.setVisible(true);
                         }
@@ -859,7 +859,7 @@ public class Mastermind extends Game implements Serializable{
             @Override
             public void mousePressed(MouseEvent e) {
 
-                String codeMaker = getPlayer()[1].getPlayer(), codeBreaker = getPlayer()[0].getPlayer();
+                String codeMaker = getPlayers()[1].getPlayer(), codeBreaker = getPlayers()[0].getPlayer();
 
                 if(getNumberGuesses() != 0){
 
@@ -874,7 +874,12 @@ public class Mastermind extends Game implements Serializable{
                         else {
                             hints = compareCode(guessColors, codeHuman);
                         }
-                        JOptionPane.showMessageDialog(null, hints);
+
+                        if(checkWin(hints)){
+                            JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                        JOptionPane.showMessageDialog(null, Arrays.toString(guessColors) + " " + Arrays.toString(solutionCode));
 
                         setNumberGuesses(getNumberGuesses()-1);
                     }
@@ -939,16 +944,13 @@ public class Mastermind extends Game implements Serializable{
 
         String codeMaker, codeBreaker;
 
-        //loop games - use checker to confirm - game over decrement numGames
-
-        //SWAP PLAYERS
         if(getNumberGames() % 2 == 0){
-                codeMaker = getPlayer()[0].getPlayer();
-                codeBreaker = getPlayer()[1].getPlayer();
+                codeMaker = getPlayers()[0].getPlayer();
+                codeBreaker = getPlayers()[1].getPlayer();
             }
         else {
-                codeMaker = getPlayer()[1].getPlayer();
-                codeBreaker = getPlayer()[0].getPlayer();
+                codeMaker = getPlayers()[1].getPlayer();
+                codeBreaker = getPlayers()[0].getPlayer();
             }
 
         if(codeMaker.equals("Computer")) {
@@ -986,17 +988,9 @@ public class Mastermind extends Game implements Serializable{
         else {
             if(Game.getVersion().equals("KIDS")){
 
-                //CREATE CODE GUI
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
-
-                Color[] hints = compareCode(codeHuman, codeHuman);
-
-                if(checkWin(hints)){
-                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
-                    //number of wins++
-                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -1007,17 +1001,9 @@ public class Mastermind extends Game implements Serializable{
             }
             else if(Game.getVersion().equals("CLASSIC")){
 
-                    //GUI TO CREATE CODE
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
-
-                Color[] hints = compareCode(codeHuman, codeHuman);
-
-                if(checkWin(hints)){
-                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
-                    //number of wins++
-                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -1026,17 +1012,9 @@ public class Mastermind extends Game implements Serializable{
                 createCode.setVisible(true);
             }
             else{
-                //GUI TO CREATE CODE
                 JFrame createCode = new JFrame("Please select colours " + codeMaker);
 
                 createCode.add(createCodePicker());
-
-                Color[] hints = compareCode(codeHuman, codeHuman);
-
-                if(checkWin(hints)){
-                    JOptionPane.showMessageDialog(null, "Congratulations, you win!", "WINNER", JOptionPane.INFORMATION_MESSAGE);
-                    //number of wins++
-                }
 
                 createCode.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createCode.setLocation(550, 50);
@@ -1178,10 +1156,10 @@ public class Mastermind extends Game implements Serializable{
             public void mousePressed(MouseEvent e) {
 
                 if(codeColorButtons[0].getBackground() == Color.LIGHT_GRAY){
-                    JOptionPane.showMessageDialog(null, "Player " + getPlayer()[1].getPlayer() + " must choose code");
+                    JOptionPane.showMessageDialog(null, "Player " + getPlayers()[1].getPlayer() + " must choose code");
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayer()[0].getPlayer() + " and " + getPlayer()[1].getPlayer());
+                    JOptionPane.showMessageDialog(null, "Welcome to the " + Game.getVersion() + " game " + getPlayers()[0].getPlayer() + " and " + getPlayers()[1].getPlayer());
                     newGame = gameGUI();
                 }
             }

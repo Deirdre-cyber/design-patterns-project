@@ -10,19 +10,19 @@ public class Game{
     private static String version;
 
     public Game(Player[] players, int numberGames, int numberGuesses, String version) {
-        setPlayer(players);
+        setPlayers(players);
         setNumberGames(numberGames);
         setNumberGuesses(numberGuesses);
         setVersion(version);
     }
 
-    public static Player[] getPlayer() {
+    public static Player[] getPlayers() {
         return Arrays.copyOf(players, players.length);
     }
 
-    public static void setPlayer(Player[] player) {
-        if(player != null)
-            players = Arrays.copyOf(player, player.length);
+    public static void setPlayers(Player[] players) {
+        if(players != null)
+            players = Arrays.copyOf(players, players.length);
     }
 
     public static int getNumberGames() {
@@ -55,7 +55,7 @@ public class Game{
         String player = "";
 
         for(int i = 0; i < players.length; i++){
-            player += getPlayer()[i] + "";
+            player += getPlayers()[i] + "";
         }
 
 
