@@ -27,7 +27,7 @@ public class Console {
 
             if(player.equals("1")){
 
-                System.out.print("Please enter your name Player One: ");
+                System.out.println("Please enter your name Player One: ");
                 playerOne = input.nextLine();
                 //Player player1 = new Player(playerOne);
                 //Player player2 = new Player("Computer");
@@ -35,11 +35,11 @@ public class Console {
             }
             else if (player.equals("2")){
 
-                System.out.print("Please enter your name Player One: ");
+                System.out.println("Please enter your name Player One: ");
                 playerOne = input.nextLine();
                 //Player player1 = new Player(playerOne);
 
-                System.out.print("Please enter your name Player Two: ");
+                System.out.println("Please enter your name Player Two: ");
                 playerTwo = input.nextLine();
                 //Player player2 = new Player(playerTwo);
                 valid= true;
@@ -80,7 +80,7 @@ public class Console {
                         case 3:
                             expert(playerOne, playerTwo);
                         default:
-                            System.out.print("Quitting now, goodbye.....");
+                            System.out.println("Quitting now, goodbye.....");
                     }
                 }
             } else {
@@ -154,8 +154,8 @@ public class Console {
         playOneGames+=gamesPlayed;
         playTwoGames+=gamesPlayed;
 
-        System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
-        System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
+        System.out.println(playerOne + " played " + playOneGames + " won " + playOneWins);
+        System.out.println(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
     }
 
     public static void classic(String playerOne, String playerTwo){
@@ -222,8 +222,8 @@ public class Console {
         playOneGames+=gamesPlayed;
         playTwoGames+=gamesPlayed;
 
-        System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
-        System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
+        System.out.println(playerOne + " played " + playOneGames + " won " + playOneWins);
+        System.out.println(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
 
        }
 
@@ -292,8 +292,8 @@ public class Console {
             playOneGames+=gamesPlayed;
             playTwoGames+=gamesPlayed;
 
-            System.out.print(playerOne + " played " + playOneGames + " won " + playOneWins);
-            System.out.print(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
+            System.out.println(playerOne + " played " + playOneGames + " won " + playOneWins);
+            System.out.println(playerTwo + " played " + playTwoGames + " won " + playTwoWins);
 
         }
 
@@ -351,6 +351,7 @@ public class Console {
             }
             s[i] = colour;
         }
+        input.close();
         return s;
     }
 
