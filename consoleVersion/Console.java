@@ -1,56 +1,44 @@
 package consoleVersion;
-
-import javax.swing.*;
+//
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class Console {
 
-    public static void main(String[] args) {
-
-        String choiceAsString, player, playerOne = "", playerTwo = "";
-        boolean valid;
-        int i, choice;
+   public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
+        String player, playerOne = "", playerTwo = "";
+        boolean valid = false;
+        int i, choice;
+        String choiceAsString;
 
         System.out.println("Press start to enter...");
-
-        //Only to be added to leaderboard if they are higher than top 3 highest scores
         System.out.println("1. SINGLE PLAYER\n2. MULTIPLAYER\n3. QUIT");
-        player =input.nextLine();
+        player = input.nextLine();
 
-        valid = false;
-
-        while(!valid){
-
-            if(player.equals("1")){
-
+        while (!valid) {
+            if (player.equals("1")) {
                 System.out.println("Please enter your name Player One: ");
                 playerOne = input.nextLine();
-                //Player player1 = new Player(playerOne);
-                //Player player2 = new Player("Computer");
-                valid= true;
-            }
-            else if (player.equals("2")){
-
+                valid = true;
+            } else if (player.equals("2")) {
                 System.out.println("Please enter your name Player One: ");
                 playerOne = input.nextLine();
-                //Player player1 = new Player(playerOne);
 
                 System.out.println("Please enter your name Player Two: ");
                 playerTwo = input.nextLine();
-                //Player player2 = new Player(playerTwo);
-                valid= true;
-            }
-            else if (player.equals("3")) {
-                JOptionPane.showMessageDialog(null, "Quitting now, goodbye.....", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+                valid = true;
+            } else if (player.equals("3")) {
+                System.out.println("Quitting now, goodbye.....");
                 System.exit(0);
+            } else {
+                System.out.println("INVALID!!\n\n1. Single Player\n2. Multiplayer\n3. Quit");
+                player = input.nextLine();
             }
-            else
-                player = JOptionPane.showInputDialog("INVALID!!\n\n1. Single Player\n\n2. Multiplayer\n\n3. Quit");
-
         }
 
         System.out.println("Choose a Game Version\n1. Children\n2. Classic \n3. Expert\n4. Quit");
@@ -79,8 +67,14 @@ public class Console {
                             break;
                         case 3:
                             expert(playerOne, playerTwo);
-                        default:
+                            break;
+                        case 4:
                             System.out.println("Quitting now, goodbye.....");
+                            System.exit(0);
+                            break;
+                        default:
+                            System.out.println("Invalid choice. Quitting now, goodbye.....");
+                            break;
                     }
                 }
             } else {
@@ -227,7 +221,7 @@ public class Console {
 
        }
 
-        public static void expert(String playerOne, String playerTwo){
+    public static void expert(String playerOne, String playerTwo){
 
             int numGames = numberValidator("games"), numGuesses = numberValidator("guesses"), gamesPlayed=0, guessesMade = 0;
             char[] solution;
