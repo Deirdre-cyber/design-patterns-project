@@ -1,0 +1,4 @@
+DPSystem.mastermind.src.main.java.com.example.GameMode#initializeSolution(LDPSystem/mastermind/src/main/java/com/example/GameDifficulty;)V
+java.lang.IllegalArgumentException#<init>(Ljava/lang/String;)V
+DPSystem.mastermind.src.main.java.com.example.GameMode#generateRandomSolution([C)[C
+java.lang.IllegalArgumentException#instance-init#

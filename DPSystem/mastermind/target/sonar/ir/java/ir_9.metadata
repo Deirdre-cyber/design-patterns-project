@@ -1,0 +1,10 @@
+DPSystem.mastermind.src.main.java.com.example.GameMode#makeMove()V
+java.util.Scanner#instance-init#
+java.lang.String#charAt(I)C
+java.util.Scanner#next()Ljava/lang/String;
+DPSystem.mastermind.src.main.java.com.example.GameMode#displayGuessesAndHints([C[Z)V
+java.util.Scanner#<init>(Ljava/io/InputStream;)V
+==
+println java.io.PrintStream#println(Ljava/lang/String;)V
+compareCode DPSystem.mastermind.src.main.java.com.example.GameMode#compareCode([C[C)[Z
+placeMove DPSystem.mastermind.src.main.java.com.example.GameMode#placeMove([C)V

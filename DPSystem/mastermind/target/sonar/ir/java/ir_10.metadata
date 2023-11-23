@@ -1,0 +1,4 @@
+DPSystem.mastermind.src.main.java.com.example.GameMode#displayGuessesAndHints([C[Z)V
+==
+println java.io.PrintStream#println()V
+print java.io.PrintStream#print(Ljava/lang/String;)V

@@ -1,0 +1,8 @@
+DPSystem.mastermind.src.main.java.com.example.Player#makeMove(LDPSystem/mastermind/src/main/java/com/example/GameMode;ZLDPSystem/mastermind/src/main/java/com/example/Player;)V
+java.util.Scanner#instance-init#
+DPSystem.mastermind.src.main.java.com.example.Player#generateRandomMove()[C
+java.lang.String#charAt(I)C
+java.util.Scanner#next()Ljava/lang/String;
+java.util.Scanner#<init>(Ljava/io/InputStream;)V
+==
+placeMove DPSystem.mastermind.src.main.java.com.example.GameMode#placeMove([C)V
