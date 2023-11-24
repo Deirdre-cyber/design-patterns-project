@@ -11,7 +11,7 @@
     <properties>
         <sonar.organization>deirdre-cyber</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectKey>Deirdre-cyber_design-patterns-project</sonar.projectKey>
+        <sonar.projectKey>Deirdre-cyber_mastermind-design-patterns</sonar.projectKey>
         <sonar.organization>deirdre-cyber</sonar.organization>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
