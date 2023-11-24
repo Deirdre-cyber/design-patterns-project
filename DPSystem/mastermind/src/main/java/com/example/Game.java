@@ -16,17 +16,22 @@ public class Game {
     public void start() {
         gameMode.startGame();
 
-        while (!gameMode.isGameFinished()) {
-            playerOne.makeMove(gameMode, false, playerTwo);
-            if (!gameMode.isGameFinished()) {
-                playerTwo.makeMove(gameMode, false, playerOne);
-            }
-            gameMode.updateTurn();
-        }
+        // while (!gameMode.isGameFinished()) {
+        //     playerOne.makeMove();
+        //     displayMoves(playerOne, playerTwo);
+        //     if (!gameMode.isGameFinished()) {
+        //         playerTwo.makeMove();
+        //         displayMoves(playerTwo, playerOne);
+        //     }
+        //     gameMode.updateTurn();
+        // }
 
         gameMode.displayResult();
         leaderboard.update(playerOne, playerTwo);
-        leaderboard.displayLeaderboard();
-        System.exit(0);
     }
+
+    // private void displayMoves(Player currentPlayer, Player opponentPlayer) {
+    //     System.out.println(currentPlayer.getName() + "'s move:");
+
+    // }
 }
