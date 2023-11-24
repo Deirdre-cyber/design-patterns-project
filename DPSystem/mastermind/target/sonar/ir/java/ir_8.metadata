@@ -1,9 +1,0 @@
-DPSystem.mastermind.src.main.java.com.example.GameMode#startGame()V
-java.util.Scanner#instance-init#
-java.util.Scanner#nextInt()I
-java.util.Scanner#<init>(Ljava/io/InputStream;)V
-==
-makeMove DPSystem.mastermind.src.main.java.com.example.GameMode#makeMove()V
-println java.io.PrintStream#println(Ljava/lang/String;)V
-isGameFinished DPSystem.mastermind.src.main.java.com.example.GameMode#isGameFinished()Z
-initializeSolution DPSystem.mastermind.src.main.java.com.example.GameMode#initializeSolution(LDPSystem/mastermind/src/main/java/com/example/GameDifficulty;)V

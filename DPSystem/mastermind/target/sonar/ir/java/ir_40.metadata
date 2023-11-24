@@ -1,5 +1,0 @@
-DPSystem.mastermind.src.main.java.com.example.Leaderboard#displayLeaderboard()V
-==
-println java.io.PrintStream#println(Ljava/lang/String;)V
-getPlayerName DPSystem.mastermind.src.main.java.com.example.Leaderboard$PlayerScore#getPlayerName()Ljava/lang/String;
-getScore DPSystem.mastermind.src.main.java.com.example.Leaderboard$PlayerScore#getScore()I

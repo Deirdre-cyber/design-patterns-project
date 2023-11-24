@@ -1,4 +1,4 @@
-package DPSystem.mastermind.src.main.java.com.example;
+package com.example;
 
 public class Game {
     private Player playerOne;
@@ -15,23 +15,8 @@ public class Game {
 
     public void start() {
         gameMode.startGame();
-
-        // while (!gameMode.isGameFinished()) {
-        //     playerOne.makeMove();
-        //     displayMoves(playerOne, playerTwo);
-        //     if (!gameMode.isGameFinished()) {
-        //         playerTwo.makeMove();
-        //         displayMoves(playerTwo, playerOne);
-        //     }
-        //     gameMode.updateTurn();
-        // }
-
         gameMode.displayResult();
         leaderboard.update(playerOne, playerTwo);
     }
 
-    // private void displayMoves(Player currentPlayer, Player opponentPlayer) {
-    //     System.out.println(currentPlayer.getName() + "'s move:");
-
-    // }
 }

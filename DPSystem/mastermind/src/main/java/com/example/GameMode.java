@@ -1,4 +1,4 @@
-package DPSystem.mastermind.src.main.java.com.example;
+package com.example;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class GameMode {
     private boolean gameIsWon;
     private int movesLeft;
     private char[] solution;
-    private char[] colors;
+    private char[] colours;
     private int numGames;
     private int numGuesses;
     private int currentTurn;
@@ -73,6 +73,7 @@ public class GameMode {
             System.out.println("Starting game: " + gameCount);
 
             initializeSolution(difficulty);
+            System.out.println("Available colours: " + Arrays.toString(colours));
 
             for (int j = 0; j < numGuesses && !isGameFinished(); j++) {
                 System.out.println("Turn: " + (j + 1));
@@ -127,9 +128,9 @@ public class GameMode {
     
         printBorder(boxWidth);
     
-        System.out.println("O = correct color, correct position");
-        System.out.println("X = correct color, wrong position");
-        System.out.println("_ = wrong color");
+        System.out.println("O = correct colour, correct position");
+        System.out.println("X = correct colour, wrong position");
+        System.out.println("_ = wrong colour");
         System.out.println();
     }
     
@@ -171,32 +172,32 @@ public class GameMode {
     public void initializeSolution(GameDifficulty difficulty) {
         switch (difficulty) {
             case CHILDREN:
-                colors = new char[] { 'r', 'g', 'b', 'y' };
+                colours = new char[] { 'r', 'g', 'b', 'y' };
                 break;
             case CLASSIC:
-                colors = new char[] { 'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v' };
+                colours = new char[] { 'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v' };
                 break;
             case EXPERT:
-                colors = new char[] { 'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v', 'c', 'm' };
+                colours = new char[] { 'w', 'y', 'o', 'r', 'p', 'b', 'g', 'v', 'c', 'm' };
                 break;
             default:
                 throw new IllegalArgumentException("Invalid difficulty level");
         }
 
-        solution = generateRandomSolution(colors);
+        solution = generateRandomSolution(colours);
     }
 
-    private char[] generateRandomSolution(char[] colors) {
+    private char[] generateRandomSolution(char[] colours) {
         char[] code = new char[4];
 
-        List<Character> colorList = new ArrayList<>();
-        for (char color : colors) {
-            colorList.add(color);
+        List<Character> colourList = new ArrayList<>();
+        for (char colour : colours) {
+            colourList.add(colour);
         }
 
         for (int i = 0; i < code.length; i++) {
-            int randomIndex = (int) (Math.random() * colorList.size());
-            code[i] = colorList.remove(randomIndex);
+            int randomIndex = (int) (Math.random() * colourList.size());
+            code[i] = colourList.remove(randomIndex);
         }
 
         return code;
@@ -268,12 +269,28 @@ public class GameMode {
             } else {
                 System.out.println("Game over. You lost!");
                 if(!gameIsWon){
-                    System.out.println("Correct answer was: " + Arrays.toString(solution));
+                   System.out.println("Correct answer was: ");
+                    displayInBox(Arrays.toString(solution));
                 }
             }
         } else {
             System.out.println("Game is not finished yet!");
         }
+    }
+
+    private void displayInBox(String content) {
+        int length = content.length();
+        printLine(length);
+        System.out.println("| " + content + " |");
+        printLine(length);
+    }
+
+    private void printLine(int length) {
+        System.out.print("+");
+        for (int i = 0; i < length + 2; i++) {
+            System.out.print("-");
+        }
+        System.out.println("+");
     }
 
     public int getMovesLeft() {

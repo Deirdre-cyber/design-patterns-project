@@ -1,4 +1,0 @@
-DPSystem.mastermind.src.main.java.com.example.GameMode#displayResult()V
-==
-println java.io.PrintStream#println(Ljava/lang/String;)V
-isGameFinished DPSystem.mastermind.src.main.java.com.example.GameMode#isGameFinished()Z

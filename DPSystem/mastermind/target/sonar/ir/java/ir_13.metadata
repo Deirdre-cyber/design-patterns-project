@@ -1,5 +1,0 @@
-DPSystem.mastermind.src.main.java.com.example.GameMode#placeMove([C)V
-==
-println java.io.PrintStream#println(Ljava/lang/String;)V
-compareCode DPSystem.mastermind.src.main.java.com.example.GameMode#compareCode([C[C)[Z
-checkWin DPSystem.mastermind.src.main.java.com.example.GameMode#checkWin([Z)Z

@@ -1,4 +1,4 @@
-package DPSystem.mastermind.src.main.java.com.example;
+package com.example;
 
 import java.io.*;
 import java.util.ArrayList;

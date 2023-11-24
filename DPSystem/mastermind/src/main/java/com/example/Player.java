@@ -1,6 +1,5 @@
-package DPSystem.mastermind.src.main.java.com.example;
+package com.example;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 enum PlayerType {
@@ -89,7 +88,6 @@ public class Player {
         getGameMode().placeMove(this, guess);
     
         setLastHints(getGameMode().compareCode(guess, getGameMode().getSolution()));
-        //getGameMode().displayGuessesAndHints(guess, getLastHints());
     }
     
     public char[] generateRandomMove() {
